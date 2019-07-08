@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 
 
-public class Trigger
+public class TriggerGroup
 {
-
+    protected HashSet<ITriggerable> _triggers;
+    pro
 }
 
 public class Unit
