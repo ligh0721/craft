@@ -1,26 +1,33 @@
-﻿public class Property
-{
-    protected string _name;
+﻿using System.Collections.Generic;
 
-    public string Name
-    {
-        get
-        {
-            return _name;
-        }
-    }
+public enum PropertyType {
+    None,
+    Strength,
+    Agility,
+    Intelligence,
+    Vitality,
+    Mentality,
+    Health,
+    PhysicAttack,
+    MagicAttack,
+    PhysicDefense,
+    MagicDefense,
+    Speed,
+    CooldownReduction,
+}
+
+public class Property
+{
+    protected PropertyType _type;
+
+    public PropertyType Type => _type;
 
     protected float _x;
 
-    public float X
-    {
-        get
-        {
-            return _x;
-        }
+    public float X {
+        get => _x;
 
-        set
-        {
+        set {
             _x = value;
             _y = _a * _x + _b;
         }
@@ -28,15 +35,10 @@
 
     protected float _a;
 
-    public float A
-    {
-        get
-        {
-            return _a;
-        }
+    public float A {
+        get => _a;
 
-        set
-        {
+        set {
             _a = value;
             _y = _a * _x + _b;
         }
@@ -44,15 +46,10 @@
 
     protected float _b;
 
-    public float B
-    {
-        get
-        {
-            return _b;
-        }
+    public float B {
+        get => _b;
 
-        set
-        {
+        set {
             _b = value;
             _y = _a * _x + _b;
         }
@@ -60,20 +57,35 @@
 
     protected float _y;
 
-    public float Y
-    {
-        get
-        {
-            return _y;
-        }
-    }
+    public float Y => _y;
 
-    public Property(string name, float x, float a = 1.0f, float b = 0.0f)
+    public Property(PropertyType type, float x, float a = 1.0f, float b = 0.0f)
     {
-        _name = name;
+        _type = type;
         _x = x;
         _a = a;
         _b = b;
         _y = a * x + b;
+    }
+}
+
+public class PropertyCollection {
+    protected Dictionary<PropertyType, Property> _properties;
+
+    public PropertyCollection() {
+        _properties = new Dictionary<PropertyType, Property>();
+    }
+
+    public Property Add(Property prop) {
+        _properties.Add(prop.Type, prop);
+        return prop;
+    }
+
+    public void Remove(PropertyType type) {
+        _properties.Remove(type);
+    }
+
+    public Property GetProperty(PropertyType type) {
+        return _properties.TryGetValue(type, out Property ret) ? ret : null;
     }
 }

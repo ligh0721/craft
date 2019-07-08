@@ -1,33 +1,19 @@
-﻿public enum AttackType
-{
-    Physical = 1,
-    Magic = 2,
+﻿public enum AttackType {
+    None,
+    Physical,
+    Magic,
 }
 
-public class AttackData
-{
+public class AttackData {
     protected AttackType _type;
 
-    public AttackType Type
-    {
-        get
-        {
-            return _type;
-        }
-    }
+    public AttackType Type => _type;
 
     protected float _value;
 
-    public float Value
-    {
-        get
-        {
-            return _value;
-        }
-    }
+    public float Value => _value;
 
-    public AttackData(AttackType type, float value)
-    {
+    public AttackData(AttackType type, float value) {
         _type = type;
         _value = value;
     }

@@ -19,8 +19,7 @@ public class TestPanel : MonoBehaviour
     public void OnBtnTest(Text txt)
     {
         txt.text = "OK";
-        Dictionary<int, int> d = new Dictionary<int, int>();
-        d[5] = 1;
-        Debug.LogFormat("{0}", d[5]);
+        TargetEffective te = TargetEffective.Ally | TargetEffective.Self;
+        Debug.LogFormat("{0}", te);
     }
 }
