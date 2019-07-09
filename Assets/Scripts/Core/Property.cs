@@ -1,18 +1,31 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 public enum PropertyType {
+    [Description("未设置")]
     None,
+    [Description("力量，影响负重能力以及物理攻击的威力")]
     Strength,
+    [Description("敏捷，影响负速度")]
     Agility,
+    [Description("智力，影响武器掌握速度以及魔法攻击的威力")]
     Intelligence,
+    [Description("体力，影响最大生命值的多少")]
     Vitality,
     Mentality,
-    Health,
+    [Description("最大生命值")]
+    MaxHealth,
+    [Description("物理攻击力")]
     PhysicAttack,
+    [Description("魔法攻击力")]
     MagicAttack,
+    [Description("物理防御力")]
     PhysicDefense,
+    [Description("魔法防御力")]
     MagicDefense,
+    [Description("速度")]
     Speed,
+    [Description("冷却时间减少")]
     CooldownReduction,
 }
 
