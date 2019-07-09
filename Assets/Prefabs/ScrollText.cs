@@ -15,7 +15,6 @@ public class ScrollText : MonoBehaviour {
     }
 
     void Start() {
-
     }
 
     public ScrollText T(string format, params object[] args) {

@@ -64,3 +64,41 @@ public class Skill : ITrigger {
         throw new System.NotImplementedException();
     }
 }
+
+public class UnitBattleField {
+    SortedDictionary<int, SortedDictionary<int, HashSet<Unit>>> _forces;
+
+    public UnitBattleField() {
+        _forces = new SortedDictionary<int, SortedDictionary<int, HashSet<Unit>>>();
+    }
+
+    public void AddUnit(Unit unit, int force, int group) {
+        if (_forces.TryGetValue(force, out var forceGroups) == false) {
+            forceGroups = new SortedDictionary<int, HashSet<Unit>>();
+            _forces.Add(force, forceGroups);
+        }
+
+        if (forceGroups.TryGetValue(group, out var groupUnits) == false) {
+            groupUnits = new HashSet<Unit>();
+            forceGroups.Add(group, groupUnits);
+        }
+
+        groupUnits.Add(unit);
+    }
+}
+
+
+public class ActiveSkill : Skill {
+    public ActiveSkill(string name, float cooldown, TargetEffective effective, TargetRange range, params TriggerType[] triggerTypes)
+        : base(name, cooldown, effective, range, triggerTypes) {
+
+    }
+
+    public void Cast() {
+
+    }
+
+    public void Cast(Unit one) {
+
+    }
+}
