@@ -10,6 +10,8 @@ public class Unit {
     protected TriggerCollection _triggers;
     protected Dictionary<string, Skill> _skills;
 
+    protected float _health;
+
     //protected Property _maxHealth;
     //public Property MaxHealth => _maxHealth;
 
@@ -24,19 +26,19 @@ public class Unit {
         _props = new PropertyCollection();
         _triggers = new TriggerCollection();
 
-        _props.Add(new Property(PropertyType.Vitality, 10f));
-        _props.Add(new Property(PropertyType.Strength, 10f));
-        _props.Add(new Property(PropertyType.Intelligence, 10f));
-        _props.Add(new Property(PropertyType.Agility, 10f));
+        _props.Add(new ValueProperty(PropertyType.Vitality, 10f));
+        _props.Add(new ValueProperty(PropertyType.Strength, 10f));
+        _props.Add(new ValueProperty(PropertyType.Intelligence, 10f));
+        _props.Add(new ValueProperty(PropertyType.Agility, 10f));
 
-        _props.Add(new Property(PropertyType.MaxHealth, 100f, 1f));
-        _props.Add(new Property(PropertyType.PhysicAttack, 10f, 1f));
-        _props.Add(new Property(PropertyType.MagicAttack, 10f, 1f));
-        _props.Add(new Property(PropertyType.PhysicDefense, 0f));
-        _props.Add(new Property(PropertyType.MagicDefense, 0f));
-        _props.Add(new Property(PropertyType.Speed, 100f, max: 2000f));
-        _props.Add(new Property(PropertyType.CriticalRate, 0.00f, max: 1.00f));
-        _props.Add(new Property(PropertyType.CriticalDamage, 1.50f, 1.00f));
+        _props.Add(new ValueProperty(PropertyType.MaxHealth, 100f, 1f));
+        _props.Add(new ValueProperty(PropertyType.PhysicAttack, 10f, 1f));
+        _props.Add(new ValueProperty(PropertyType.MagicAttack, 10f, 1f));
+        _props.Add(new ValueProperty(PropertyType.PhysicDefense, 0f));
+        _props.Add(new ValueProperty(PropertyType.MagicDefense, 0f));
+        _props.Add(new ValueProperty(PropertyType.Speed, 100f, max: 2000f));
+        _props.Add(new ValueProperty(PropertyType.CriticalRate, 0.00f, max: 1.00f));
+        _props.Add(new ValueProperty(PropertyType.CriticalDamage, 1.50f, 1.00f));
         UpdateBattleProperties();
     }
 
@@ -61,11 +63,15 @@ public class Unit {
     }
 
     public void UpdateBattleProperties() {
-        _props[PropertyType.MaxHealth].X = _props[PropertyType.Vitality].Y * 10.0f;
-        _props[PropertyType.PhysicAttack].X = _props[PropertyType.Strength].Y * 1.0f;
-        _props[PropertyType.MagicAttack].X = _props[PropertyType.Intelligence].Y * 1.0f;
-        _props[PropertyType.Speed].X = _props[PropertyType.Agility].Y * 10.0f;
+        _props[PropertyType.MaxHealth].Base = _props[PropertyType.Vitality].Value * 10.0f;
+        _props[PropertyType.PhysicAttack].Base = _props[PropertyType.Strength].Value * 1.0f;
+        _props[PropertyType.MagicAttack].Base = _props[PropertyType.Intelligence].Value * 1.0f;
+        _props[PropertyType.Speed].Base = _props[PropertyType.Agility].Value * 10.0f;
+
+        _health = _props[PropertyType.MaxHealth].Value;
     }
+
+    public bool Dead => (_health <= 0f);
 
     public void Attack() {
 

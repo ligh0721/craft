@@ -33,21 +33,26 @@ public enum PropertyType {
     CriticalDamage,
 }
 
-public class Property
-{
+public abstract class Property {
     protected PropertyType _type;
 
     public PropertyType Type => _type;
 
-    protected float _x;
+    public Property(PropertyType type) {
+        _type = type;
+    }
+}
 
-    public float X {
-        get => _x;
+public class ValueProperty : Property {
+    protected float _base;
+
+    public float Base {
+        get => _base;
 
         set {
-            _x = value;
-            _y = _a * value + _b;
-            _y = _y < _min ? _min : (_y > _max ? _max : _y);
+            _base = value;
+            _value = _a * value + _b;
+            _value = _value < _min ? _min : (_value > _max ? _max : _value);
         }
     }
 
@@ -58,8 +63,8 @@ public class Property
 
         set {
             _a = value;
-            _y = value * _x + _b;
-            _y = _y < _min ? _min : (_y > _max ? _max : _y);
+            _value = value * _base + _b;
+            _value = _value < _min ? _min : (_value > _max ? _max : _value);
         }
     }
 
@@ -70,8 +75,8 @@ public class Property
 
         set {
             _b = value;
-            _y = _a * _x + value;
-            _y = _y < _min ? _min : (_y > _max ? _max : _y);
+            _value = _a * _base + value;
+            _value = _value < _min ? _min : (_value > _max ? _max : _value);
         }
     }
 
@@ -82,9 +87,9 @@ public class Property
 
         set {
             _min = value;
-            _y = _a * _x + _b;
-            if (_y < value) {
-                _y = value;
+            _value = _a * _base + _b;
+            if (_value < value) {
+                _value = value;
             }
         }
     }
@@ -96,26 +101,25 @@ public class Property
 
         set {
             _max = value;
-            _y = _a * _x + _b;
-            if (_y > value) {
-                _y = value;
+            _value = _a * _base + _b;
+            if (_value > value) {
+                _value = value;
             }
         }
     }
 
-    protected float _y;
+    protected float _value;
 
-    public float Y => _y;
+    public float Value => _value;
 
-    public Property(PropertyType type, float x, float min = 0f, float max = 999999f, float a = 1f, float b = 0f)
-    {
-        _type = type;
-        _x = x;
+    public ValueProperty(PropertyType type, float @base, float min = 0f, float max = 999999f, float a = 1f, float b = 0f)
+        : base(type) {
+        _base = @base;
         _min = min;
         _max = max;
         _a = a;
         _b = b;
-        _y = a * x + b;
+        _value = a * @base + b;
     }
 }
 
@@ -126,7 +130,7 @@ public class PropertyCollection {
         _properties = new Dictionary<PropertyType, Property>();
     }
 
-    public Property Add(Property prop) {
+    public PROPERTY Add<PROPERTY>(PROPERTY prop) where PROPERTY : Property {
         _properties.Add(prop.Type, prop);
         return prop;
     }
@@ -135,9 +139,13 @@ public class PropertyCollection {
         _properties.Remove(type);
     }
 
-    public Property Get(PropertyType type) {
-        return _properties.TryGetValue(type, out Property ret) ? ret : null;
+    public ValueProperty Get(PropertyType type) {
+        return _properties.TryGetValue(type, out Property ret) ? ret as ValueProperty : null;
     }
 
-    public Property this[PropertyType type] => Get(type);
+    public ValueProperty this[PropertyType type] => Get(type);
+
+    public PROPERTY Get<PROPERTY>(PropertyType type) where PROPERTY : Property {
+        return _properties.TryGetValue(type, out Property ret) ? ret as PROPERTY : null;
+    }
 }

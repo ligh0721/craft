@@ -15,7 +15,3 @@ public enum TargetRange {
     Force,
     All,
 }
-
-public class Target {
-
-}
