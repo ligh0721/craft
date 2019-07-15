@@ -27,5 +27,7 @@ public class TestPanel : MonoBehaviour {
 
         _text.B().C("61fa68").T("t5word").C("5df3f5").T("@").C("61fa68").T("tmac").C("6771fe").T(" ~/proj/craft\n").Print();
         _text.B().C("e5b0ff").T("胖子").E().T("进行了").C("6771fe").T("魔法").E().T("攻击\n").Print();
+
+        MaxValueProperty mp = new MaxValueProperty(PropertyType.Agility, 10, 100);
     }
 }

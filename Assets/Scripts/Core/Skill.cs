@@ -12,9 +12,25 @@ public class Skill : ITrigger {
 
     protected float _cooldown;
 
-    public float Cooldown => _cooldown;
+    public float Cooldown {
+        get => _cooldown;
+        set {
+            ValueProperty cdr = _owner.GetProperty(PropertyType.CooldownReduction);
+            float cd_rate = cdr != null ? 1.00f - cdr.Value : 1.00f;
+            
+            _cooldownElapsed *= value / _cooldown;
+            _cooldown = value;
+        }
+    }
 
-    protected float _cooldownLeft;
+    public float RealCooldown {
+        get {
+            ValueProperty cdr = _owner.GetProperty(PropertyType.CooldownReduction);
+            return cdr != null ? (1.00f - cdr.Value) * _cooldown : _cooldown;
+        }
+    }
+
+    protected float _cooldownElapsed;
 
     protected TargetEffective _effective;
 
@@ -35,7 +51,7 @@ public class Skill : ITrigger {
         _effective = effective;
         _range = range;
         _triggerTypes = triggerTypes;
-        _cooldownLeft = cooldown;
+        _cooldownElapsed = 0;
     }
 
     public void AddToUnit(Unit unit) {
@@ -47,6 +63,12 @@ public class Skill : ITrigger {
         OnRemove();
         _owner = null;
     }
+
+    public void StartCoolingdown() {
+        _cooldownElapsed = 0;
+    }
+
+    public void Update(float delta) => _cooldownElapsed += delta;
 
     protected void OnAdd() {
 

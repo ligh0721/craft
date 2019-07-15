@@ -26,21 +26,34 @@ public class Unit {
         _props = new PropertyCollection();
         _triggers = new TriggerCollection();
 
-        _props.Add(new ValueProperty(PropertyType.Vitality, 10f));
-        _props.Add(new ValueProperty(PropertyType.Strength, 10f));
-        _props.Add(new ValueProperty(PropertyType.Intelligence, 10f));
-        _props.Add(new ValueProperty(PropertyType.Agility, 10f));
+        _props.Add(new ValueProperty(PropertyType.Vitality, 10));
+        _props.Add(new ValueProperty(PropertyType.Strength, 10));
+        _props.Add(new ValueProperty(PropertyType.Intelligence, 10));
+        _props.Add(new ValueProperty(PropertyType.Agility, 10));
 
-        _props.Add(new ValueProperty(PropertyType.MaxHealth, 100f, 1f));
-        _props.Add(new ValueProperty(PropertyType.PhysicAttack, 10f, 1f));
-        _props.Add(new ValueProperty(PropertyType.MagicAttack, 10f, 1f));
-        _props.Add(new ValueProperty(PropertyType.PhysicDefense, 0f));
-        _props.Add(new ValueProperty(PropertyType.MagicDefense, 0f));
-        _props.Add(new ValueProperty(PropertyType.Speed, 100f, max: 2000f));
+        // BattleProperties
+        _props.Add(new ValueProperty(PropertyType.MaxHealth, 100, 1));
+        _props.Add(new ValueProperty(PropertyType.PhysicAttack, 10, 1));
+        _props.Add(new ValueProperty(PropertyType.MagicAttack, 10f, 1));
+        _props.Add(new ValueProperty(PropertyType.PhysicDefense, 0));
+        _props.Add(new ValueProperty(PropertyType.MagicDefense, 0));
+        _props.Add(new ValueProperty(PropertyType.Speed, 100, max: 2000));
         _props.Add(new ValueProperty(PropertyType.CriticalRate, 0.00f, max: 1.00f));
         _props.Add(new ValueProperty(PropertyType.CriticalDamage, 1.50f, 1.00f));
+        _props.Add(new ValueProperty(PropertyType.CooldownReduction, 0, -10.0f, 0.80f));
+
+        _props.Add(new SimpleProperty<int>(PropertyType.BattleForce, 0));
+        _props.Add(new SimpleProperty<int>(PropertyType.BattleGroup, 0));
         UpdateBattleProperties();
     }
+
+    public void AddProperty(Property prop) => _props.Add(prop);
+
+    public void RemoveProperty(PropertyType type) => _props.Remove(type);
+
+    public ValueProperty GetProperty(PropertyType type) => _props.Get(type);
+
+    public Property GetProperty<PROPERTY>(PropertyType type) where PROPERTY : Property => _props.Get<PROPERTY>(type);
 
     public Skill AddSkill(Skill skill) {
         skill.AddToUnit(this);

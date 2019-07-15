@@ -31,6 +31,10 @@ public enum PropertyType {
     CriticalRate,
     [Description("暴击伤害")]
     CriticalDamage,
+    [Description("战斗势力")]
+    BattleForce,
+    [Description("战斗组")]
+    BattleGroup,
 }
 
 public abstract class Property {
@@ -147,5 +151,80 @@ public class PropertyCollection {
 
     public PROPERTY Get<PROPERTY>(PropertyType type) where PROPERTY : Property {
         return _properties.TryGetValue(type, out Property ret) ? ret as PROPERTY : null;
+    }
+}
+
+public class SimpleProperty<TYPE> : Property {
+    protected TYPE _value;
+
+    public TYPE Value { get => _value; set => _value = value; }
+
+    public SimpleProperty(PropertyType type, TYPE value)
+        : base(type) {
+        _value = value;
+    }
+}
+
+public class MaxValueProperty : Property {
+    protected float _current;
+
+    public float Current => _current;
+
+    protected ValueProperty _max;
+
+    protected bool _overflow;
+
+    public bool Overflow {
+        get => _overflow;
+        set {
+            if (value == _overflow || value == false) {
+                return;
+            }
+            if (_current > _max.Value) {
+                _current = _max.Value;
+            }
+            _overflow = value;
+        }
+    }
+
+    public MaxValueProperty(PropertyType type, float @base, float max = 999999f, float a = 1f, float b = 0f, bool overflow = false)
+        : base(type) {
+        _max = new ValueProperty(type, @base, float.Epsilon, max, a, b);
+        _overflow = overflow;
+    }
+
+    public float Base {
+        get => _max.Base;
+        set {
+            _max.Base = value;
+        }
+    }
+
+    public float A {
+        get => _max.A;
+        set {
+            _max.A = value;
+        }
+    }
+
+    public float B {
+        get => _max.B;
+        set {
+            _max.B = value;
+        }
+    }
+
+    public float Min {
+        get => _max.Min;
+        set {
+            _max.Min = value;
+        }
+    }
+
+    public float Max {
+        get => _max.Max;
+        set {
+            _max.Max = value;
+        }
     }
 }
