@@ -8,6 +8,7 @@ public class Unit {
 
     protected PropertyCollection _props;
     protected TriggerCollection _triggers;
+    public TriggerCollection Triggers => _triggers;
     protected Dictionary<string, Skill> _skills;
 
     protected SimpleProperty<bool> _alive;
@@ -103,5 +104,15 @@ public class Unit {
             return null;
         }
         return ad;
+    }
+
+    public void Damaged(Unit source, AttackData ad) {
+        float physicalDef = _props.GetFloatValue(PropertyType.PhysicDefense);
+        ad.Physical *= (1.00f - physicalDef / (physicalDef + 100));
+        float magicDef = _props.GetFloatValue(PropertyType.MagicDefense);
+        ad.Magic *= (1.00f - magicDef / (magicDef + 100));
+        if (source == null || source.Triggers.TriggerOnDamageTarget(this, ad) == false) {
+            return;
+        }
     }
 }

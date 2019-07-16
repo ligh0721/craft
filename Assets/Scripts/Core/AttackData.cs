@@ -7,11 +7,22 @@
 public class AttackData {
     protected float _physical;
 
-    public float Physical => _physical;
+    public float Physical {
+        get => _physical;
+        set {
+            _physical = value;
+        }
+    }
 
     protected float _magic;
 
-    public float Magic => _magic;
+    public float Magic {
+        get => _magic;
+
+        set {
+            _magic = value;
+        }
+    }
 
     protected readonly bool _critical;
 

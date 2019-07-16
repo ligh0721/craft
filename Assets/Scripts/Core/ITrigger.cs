@@ -8,7 +8,7 @@ public enum TriggerType {
 
 public interface ITrigger {
     bool OnAttackTarget(Unit target, AttackData attackData);
-    bool OnDamageTarget(Unit target, float value);
+    bool OnDamageTarget(Unit target, AttackData attackData);
 }
 
 public class TriggerCollection {
@@ -55,9 +55,9 @@ public class TriggerCollection {
         return true;
     }
 
-    public bool TriggerOnDamageTarget(Unit target, float value) {
+    public bool TriggerOnDamageTarget(Unit target, AttackData ad) {
         for (var it = _onDamageTargetTriggers.GetEnumerator(); it.MoveNext();) {
-            if (it.Current.OnDamageTarget(target, value) == false) {
+            if (it.Current.OnDamageTarget(target, ad) == false) {
                 return false;
             }
         }
