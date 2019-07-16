@@ -60,7 +60,7 @@ public class Unit {
     public Skill AddSkill(Skill skill) {
         skill.AddToUnit(this);
         foreach (var triggerType in skill.TriggerTypes) {
-            _triggers.Add(triggerType, skill);
+            _triggers.AddTrigger(triggerType, skill);
         }
         _skills.Add(skill.Name, skill);
         return skill;
@@ -72,7 +72,7 @@ public class Unit {
         }
         _skills.Remove(name);
         foreach (var triggerType in skill.TriggerTypes) {
-            _triggers.Remove(triggerType, skill);
+            _triggers.RemoveTrigger(triggerType, skill);
         }
         skill.RemoveFromUnit();
     }
@@ -86,7 +86,22 @@ public class Unit {
 
     public bool Alive => _alive.Value;
 
-    public void Attack() {
+    public AttackData Attack(Unit target, float physicalFactorA = 1, float physicalFactorB = 0, float magicFactorA = 1, float magicFactorB = 0, float criticalRateFactor = 1) {
+        float criticalRate = _props.GetFloatValue(PropertyType.CriticalRate) * criticalRateFactor;
+        
+        float physical = _props.GetFloatValue(PropertyType.PhysicAttack) * physicalFactorA + physicalFactorB;
+        float magic = _props.GetFloatValue(PropertyType.MagicAttack) * magicFactorA + magicFactorB;
+        bool critical = Utils.Chance(criticalRate);
+        if (critical) {
+            float criticalDamage = _props.GetFloatValue(PropertyType.CriticalDamage, 1.00f);
+            physical *= criticalDamage;
+            magic *= criticalDamage;
+        }
 
+        AttackData ad = new AttackData(physical, magic, critical);
+        if (_triggers.TriggerOnAttackTarget(target, ad) == false) {
+            return null;
+        }
+        return ad;
     }
 }

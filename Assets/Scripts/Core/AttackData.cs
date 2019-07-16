@@ -5,16 +5,21 @@
 }
 
 public class AttackData {
-    protected AttackType _type;
+    protected float _physical;
 
-    public AttackType Type => _type;
+    public float Physical => _physical;
 
-    protected float _value;
+    protected float _magic;
 
-    public float Value => _value;
+    public float Magic => _magic;
 
-    public AttackData(AttackType type, float value) {
-        _type = type;
-        _value = value;
+    protected readonly bool _critical;
+
+    public bool Critical => _critical;
+
+    public AttackData(float physical, float magic, bool critical) {
+        _physical = physical;
+        _magic = magic;
+        _critical = critical;
     }
 }

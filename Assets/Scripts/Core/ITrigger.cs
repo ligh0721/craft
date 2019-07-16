@@ -20,7 +20,7 @@ public class TriggerCollection {
         _onDamageTargetTriggers = new HashSet<ITrigger>();
     }
 
-    public void Add(TriggerType type, ITrigger trigger) {
+    public void AddTrigger(TriggerType type, ITrigger trigger) {
         switch (type) {
         case TriggerType.OnAttackTarget:
             _onAttackTargetTriggers.Add(trigger);
@@ -33,7 +33,7 @@ public class TriggerCollection {
         }
     }
 
-    public void Remove(TriggerType type, ITrigger trigger) {
+    public void RemoveTrigger(TriggerType type, ITrigger trigger) {
         switch (type) {
         case TriggerType.OnAttackTarget:
             _onAttackTargetTriggers.Remove(trigger);

@@ -82,11 +82,6 @@ public class Skill : ITrigger {
 public class ActiveSkill : Skill {
     public ActiveSkill(string name, float cooldown, Relation effective, RangeType range, params TriggerType[] triggerTypes)
         : base(name, cooldown, effective, range, triggerTypes) {
-
-    }
-
-    public void Cast() {
-
     }
 
     public void Cast(Unit one) {
