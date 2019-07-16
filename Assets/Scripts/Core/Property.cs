@@ -35,6 +35,8 @@ public enum PropertyType {
     CriticalDamage,
     [Description("战斗势力")]
     BattleForce,
+    [Description("战斗势力结盟掩码")]
+    BattleForceMask,
     [Description("战斗组")]
     BattleGroup,
 }
@@ -49,7 +51,23 @@ public abstract class Property {
     }
 }
 
-public class ValueProperty : Property {
+public interface IFloatValue {
+    float Value { get; }
+}
+
+public interface IIntValue {
+    int Value { get; }
+}
+
+public interface IBoolValue {
+    bool Value { get; }
+}
+
+public interface IStrValue {
+    string Value { get; }
+}
+
+public class ValueProperty : Property, IFloatValue {
     protected float _base;
 
     public float Base {
@@ -127,33 +145,6 @@ public class ValueProperty : Property {
     }
 }
 
-public class PropertyCollection {
-    protected Dictionary<PropertyType, Property> _properties;
-
-    public PropertyCollection() {
-        _properties = new Dictionary<PropertyType, Property>();
-    }
-
-    public PROPERTY Add<PROPERTY>(PROPERTY prop) where PROPERTY : Property {
-        _properties.Add(prop.Type, prop);
-        return prop;
-    }
-
-    public void Remove(PropertyType type) {
-        _properties.Remove(type);
-    }
-
-    public ValueProperty Get(PropertyType type) {
-        return _properties.TryGetValue(type, out Property ret) ? ret as ValueProperty : null;
-    }
-
-    public ValueProperty this[PropertyType type] => Get(type);
-
-    public PROPERTY Get<PROPERTY>(PropertyType type) where PROPERTY : Property {
-        return _properties.TryGetValue(type, out Property ret) ? ret as PROPERTY : null;
-    }
-}
-
 public class SimpleProperty<TYPE> : Property {
     protected TYPE _value;
 
@@ -165,7 +156,31 @@ public class SimpleProperty<TYPE> : Property {
     }
 }
 
-public class MaxValueProperty : Property {
+public class FloatProperty : SimpleProperty<float>, IFloatValue {
+    public FloatProperty(PropertyType type, float value)
+        : base(type, value) {
+    }
+}
+
+public class IntProperty : SimpleProperty<int>, IIntValue {
+    public IntProperty(PropertyType type, int value)
+        : base(type, value) {
+    }
+}
+
+public class BoolProperty : SimpleProperty<bool>, IBoolValue {
+    public BoolProperty(PropertyType type, bool value)
+        : base(type, value) {
+    }
+}
+
+public class StrProperty : SimpleProperty<string>, IStrValue {
+    public StrProperty(PropertyType type, string value)
+        : base(type, value) {
+    }
+}
+
+public class MaxValueProperty : Property, IFloatValue {
     protected float _current;
 
     public float Current {
@@ -234,4 +249,33 @@ public class MaxValueProperty : Property {
     }
 
     public float Value => _max.Value;
+}
+
+public class PropertyCollection {
+    protected Dictionary<PropertyType, Property> _props;
+
+    public PropertyCollection() {
+        _props = new Dictionary<PropertyType, Property>();
+    }
+
+    public PROPERTY AddProperty<PROPERTY>(PROPERTY prop) where PROPERTY : Property {
+        _props.Add(prop.Type, prop);
+        return prop;
+    }
+
+    public void RemoveProperty(PropertyType type) => _props.Remove(type);
+
+    public Property GetProperty(PropertyType type) => _props.TryGetValue(type, out Property ret) ? ret : null;
+
+    public Property this[PropertyType type] => GetProperty(type);
+
+    public PROPERTY GetProperty<PROPERTY>(PropertyType type) where PROPERTY : Property => _props.TryGetValue(type, out Property ret) ? ret as PROPERTY : null;
+
+    public float GetFloatValue(PropertyType type, float @default = 0) => _props.TryGetValue(type, out Property ret) ? (ret as IFloatValue).Value : @default;
+
+    public int GetIntValue(PropertyType type, int @default = 0) => _props.TryGetValue(type, out Property ret) ? (ret as IIntValue).Value : @default;
+
+    public bool GetBoolValue(PropertyType type, bool @default = false) => _props.TryGetValue(type, out Property ret) ? (ret as IBoolValue).Value : @default;
+
+    public string GetStrValue(PropertyType type, string @default = "") => _props.TryGetValue(type, out Property ret) ? (ret as IStrValue).Value : @default;
 }

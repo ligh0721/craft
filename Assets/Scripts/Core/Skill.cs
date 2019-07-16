@@ -15,36 +15,28 @@ public class Skill : ITrigger {
     public float Cooldown {
         get => _cooldown;
         set {
-            ValueProperty cdr = _owner.GetProperty(PropertyType.CooldownReduction);
-            float cd_rate = cdr != null ? 1.00f - cdr.Value : 1.00f;
-            
             _cooldownElapsed *= value / _cooldown;
             _cooldown = value;
         }
     }
 
-    public float RealCooldown {
-        get {
-            ValueProperty cdr = _owner.GetProperty(PropertyType.CooldownReduction);
-            return cdr != null ? (1.00f - cdr.Value) * _cooldown : _cooldown;
-        }
-    }
+    public float RealCooldown => (1.00f - _owner.GetFloatProperty(PropertyType.CooldownReduction)) * _cooldown;
 
     protected float _cooldownElapsed;
 
-    protected TargetEffective _effective;
+    protected Relation _effective;
 
-    public TargetEffective Effective => _effective;
+    public Relation Effective => _effective;
 
-    protected TargetRange _range;
+    protected RangeType _range;
 
-    public TargetRange Range => _range;
+    public RangeType Range => _range;
 
     protected TriggerType[] _triggerTypes;
 
     public TriggerType[] TriggerTypes => _triggerTypes;
 
-    public Skill(string name, float cooldown, TargetEffective effective, TargetRange range, params TriggerType[] triggerTypes) {
+    public Skill(string name, float cooldown, Relation effective, RangeType range, params TriggerType[] triggerTypes) {
         _name = name;
         _owner = null;
         _cooldown = cooldown;
@@ -88,7 +80,7 @@ public class Skill : ITrigger {
 }
 
 public class ActiveSkill : Skill {
-    public ActiveSkill(string name, float cooldown, TargetEffective effective, TargetRange range, params TriggerType[] triggerTypes)
+    public ActiveSkill(string name, float cooldown, Relation effective, RangeType range, params TriggerType[] triggerTypes)
         : base(name, cooldown, effective, range, triggerTypes) {
 
     }

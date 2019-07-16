@@ -17,7 +17,7 @@ public class TestPanel : MonoBehaviour {
 
     public void OnBtnTest(Text txt) {
         txt.text = "OK";
-        TargetEffective te = TargetEffective.Ally | TargetEffective.Self;
+        Relation te = Relation.Ally | Relation.Self;
         Debug.LogFormat("{0}", te);
 
         Color c = new Color(1.0f, 1.0f, 1.0f);
@@ -25,22 +25,24 @@ public class TestPanel : MonoBehaviour {
         Color32 c2 = new Color32(255, 128, 125, 255);
         Debug.Log(ColorUtility.ToHtmlStringRGB(c2));
 
-        _text.B().C("61fa68").T("t5word").C("5df3f5").T("@").C("61fa68").T("tmac").C("6771fe").T(" ~/proj/craft\n").Print();
-        _text.B().C("e5b0ff").T("胖子").E().T("进行了").C("6771fe").T("魔法").E().T("攻击\n").Print();
+        _text.B().C("61fa68").T("t5word").C("5df3f5").T("@").C("61fa68").T("tmac").C("6771fe").T(" ~/proj/craft").PrintLn();
+        _text.B().C("e5b0ff").T("胖子").E().T("进行了").C("6771fe").T("魔法").E().T("攻击").PrintLn();
 
         MaxValueProperty hp = new MaxValueProperty(PropertyType.Health, 10, 100);
-        Debug.LogFormat("HP: {0}/{1}", hp.Current, hp.Value);
+        _text.T("HP: {0}/{1}", hp.Current, hp.Value).PrintLn();
         hp.Current = 5;
-        Debug.LogFormat("HP: {0}/{1}", hp.Current, hp.Value);
+        _text.T("HP: {0}/{1}", hp.Current, hp.Value).PrintLn();
         hp.Overflow = true;
         hp.Current = 15;
-        Debug.LogFormat("HP: {0}/{1}", hp.Current, hp.Value);
+        _text.T("HP: {0}/{1}", hp.Current, hp.Value).PrintLn();
         hp.Overflow = false;
-        Debug.LogFormat("HP: {0}/{1}", hp.Current, hp.Value);
+        _text.T("HP: {0}/{1}", hp.Current, hp.Value).PrintLn();
         hp.Base = 150;
         hp.Current = 25;
-        Debug.LogFormat("HP: {0}/{1}", hp.Current, hp.Value);
+        _text.T("HP: {0}/{1}", hp.Current, hp.Value).PrintLn();
         hp.Base = 10;
-        Debug.LogFormat("HP: {0}/{1}", hp.Current, hp.Value);
+        _text.T("HP: {0}/{1}", hp.Current, hp.Value).PrintLn();
+
+
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 
-
 public static class UnitFilter {
     public delegate bool Filter(Unit unit, params object[] args);
 

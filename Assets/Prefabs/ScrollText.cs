@@ -92,4 +92,9 @@ public class ScrollText : MonoBehaviour {
         _text.text += _strBuilder.ToString();
         _strBuilder.Clear();
     }
+
+    public void PrintLn() {
+        _strBuilder.Append("\n");
+        Print();
+    }
 }
