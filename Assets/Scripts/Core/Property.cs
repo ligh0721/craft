@@ -42,13 +42,6 @@ public enum PropertyType {
 }
 
 public abstract class Property {
-    protected PropertyType _type;
-
-    public PropertyType Type => _type;
-
-    public Property(PropertyType type) {
-        _type = type;
-    }
 }
 
 public interface IFloatValue {
@@ -134,8 +127,7 @@ public class ValueProperty : Property, IFloatValue {
 
     public float Value => _value;
 
-    public ValueProperty(PropertyType type, float @base, float min = 0, float max = 999999, float a = 1, float b = 0)
-        : base(type) {
+    public ValueProperty(float @base, float min = 0, float max = 999999, float a = 1, float b = 0) {
         _base = @base;
         _min = min;
         _max = max;
@@ -150,33 +142,32 @@ public class SimpleProperty<TYPE> : Property {
 
     public TYPE Value { get => _value; set => _value = value; }
 
-    public SimpleProperty(PropertyType type, TYPE value)
-        : base(type) {
+    public SimpleProperty(TYPE value) {
         _value = value;
     }
 }
 
 public class FloatProperty : SimpleProperty<float>, IFloatValue {
-    public FloatProperty(PropertyType type, float value)
-        : base(type, value) {
+    public FloatProperty(float value)
+        : base(value) {
     }
 }
 
 public class IntProperty : SimpleProperty<int>, IIntValue {
-    public IntProperty(PropertyType type, int value)
-        : base(type, value) {
+    public IntProperty(int value)
+        : base(value) {
     }
 }
 
 public class BoolProperty : SimpleProperty<bool>, IBoolValue {
-    public BoolProperty(PropertyType type, bool value)
-        : base(type, value) {
+    public BoolProperty(bool value)
+        : base(value) {
     }
 }
 
 public class StrProperty : SimpleProperty<string>, IStrValue {
-    public StrProperty(PropertyType type, string value)
-        : base(type, value) {
+    public StrProperty(string value)
+        : base(value) {
     }
 }
 
@@ -205,9 +196,8 @@ public class MaxValueProperty : Property, IFloatValue {
         }
     }
 
-    public MaxValueProperty(PropertyType type, float @base, float max = 999999, float a = 1, float b = 0, bool overflow = false)
-        : base(type) {
-        _max = new ValueProperty(type, @base, float.Epsilon, max, a, b);
+    public MaxValueProperty(float @base, float max = 999999, float a = 1, float b = 0, bool overflow = false) {
+        _max = new ValueProperty(@base, float.Epsilon, max, a, b);
         _overflow = overflow;
         _current = _max.Value;
     }
@@ -258,8 +248,8 @@ public class PropertyCollection {
         _props = new Dictionary<PropertyType, Property>();
     }
 
-    public PROPERTY AddProperty<PROPERTY>(PROPERTY prop) where PROPERTY : Property {
-        _props.Add(prop.Type, prop);
+    public PROPERTY AddProperty<PROPERTY>(PropertyType type, PROPERTY prop) where PROPERTY : Property {
+        _props.Add(type, prop);
         return prop;
     }
 

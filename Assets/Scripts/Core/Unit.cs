@@ -18,30 +18,30 @@ public class Unit {
         _props = new PropertyCollection();
         _triggers = new TriggerCollection();
 
-        _alive = _props.AddProperty(new SimpleProperty<bool>(PropertyType.Alive, true));
+        _alive = _props.AddProperty(PropertyType.Alive, new BoolProperty(true));
 
-        _props.AddProperty(new ValueProperty(PropertyType.Vitality, 10));
-        _props.AddProperty(new ValueProperty(PropertyType.Strength, 10));
-        _props.AddProperty(new ValueProperty(PropertyType.Intelligence, 10));
-        _props.AddProperty(new ValueProperty(PropertyType.Agility, 10));
+        _props.AddProperty(PropertyType.Vitality, new ValueProperty(10));
+        _props.AddProperty(PropertyType.Strength, new ValueProperty(10));
+        _props.AddProperty(PropertyType.Intelligence, new ValueProperty(10));
+        _props.AddProperty(PropertyType.Agility, new ValueProperty(10));
 
         // BattleProperties
-        _health = _props.AddProperty(new MaxValueProperty(PropertyType.Health, 100));
-        _props.AddProperty(new ValueProperty(PropertyType.PhysicAttack, 10, 1));
-        _props.AddProperty(new ValueProperty(PropertyType.MagicAttack, 10f, 1));
-        _props.AddProperty(new ValueProperty(PropertyType.PhysicDefense, 0));
-        _props.AddProperty(new ValueProperty(PropertyType.MagicDefense, 0));
-        _props.AddProperty(new ValueProperty(PropertyType.Speed, 100, max: 2000));
-        _props.AddProperty(new ValueProperty(PropertyType.CriticalRate, 0.00f, max: 1.00f));
-        _props.AddProperty(new ValueProperty(PropertyType.CriticalDamage, 1.50f, 1.00f));
-        _props.AddProperty(new ValueProperty(PropertyType.CooldownReduction, 0, -10.0f, 0.80f));
+        _health = _props.AddProperty(PropertyType.Health, new MaxValueProperty(100));
+        _props.AddProperty(PropertyType.PhysicAttack, new ValueProperty(10, 1));
+        _props.AddProperty(PropertyType.MagicAttack, new ValueProperty(10f, 1));
+        _props.AddProperty(PropertyType.PhysicDefense, new ValueProperty(0));
+        _props.AddProperty(PropertyType.MagicDefense, new ValueProperty(0));
+        _props.AddProperty(PropertyType.Speed, new ValueProperty(100, max: 2000));
+        _props.AddProperty(PropertyType.CriticalRate, new ValueProperty(0.00f, max: 1.00f));
+        _props.AddProperty(PropertyType.CriticalDamage, new ValueProperty(1.50f, 1.00f));
+        _props.AddProperty(PropertyType.CooldownReduction, new ValueProperty(0, -10.0f, 0.80f));
 
-        _props.AddProperty(new SimpleProperty<int>(PropertyType.BattleForce, 0));
-        _props.AddProperty(new SimpleProperty<int>(PropertyType.BattleGroup, 0));
+        _props.AddProperty(PropertyType.BattleForce, new IntProperty(0));
+        _props.AddProperty(PropertyType.BattleGroup, new IntProperty(0));
         UpdateBattleProperties();
     }
 
-    public void AddProperty(Property prop) => _props.AddProperty(prop);
+    public void AddProperty(PropertyType type, Property prop) => _props.AddProperty(type, prop);
 
     public void RemoveProperty(PropertyType type) => _props.RemoveProperty(type);
 

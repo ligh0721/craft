@@ -28,7 +28,7 @@ public class TestPanel : MonoBehaviour {
         _text.B().C("61fa68").T("t5word").C("5df3f5").T("@").C("61fa68").T("tmac").C("6771fe").T(" ~/proj/craft").PrintLn();
         _text.B().C("e5b0ff").T("胖子").E().T("进行了").C("6771fe").T("魔法").E().T("攻击").PrintLn();
 
-        MaxValueProperty hp = new MaxValueProperty(PropertyType.Health, 10, 100);
+        MaxValueProperty hp = new MaxValueProperty(10, 100);
         _text.T("HP: {0}/{1}", hp.Current, hp.Value).PrintLn();
         hp.Current = 5;
         _text.T("HP: {0}/{1}", hp.Current, hp.Value).PrintLn();
@@ -42,7 +42,5 @@ public class TestPanel : MonoBehaviour {
         _text.T("HP: {0}/{1}", hp.Current, hp.Value).PrintLn();
         hp.Base = 10;
         _text.T("HP: {0}/{1}", hp.Current, hp.Value).PrintLn();
-
-
     }
 }
