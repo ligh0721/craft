@@ -10,21 +10,15 @@ public class Unit {
     protected TriggerCollection _triggers;
     protected Dictionary<string, Skill> _skills;
 
-    protected float _health;
-
-    //protected Property _maxHealth;
-    //public Property MaxHealth => _maxHealth;
-
-    //protected Property _physicAttack;
-    //public Property PhysicAttack => _physicAttack;
-
-    //protected Property _magicAttack;
-    //public Property MagicAttack => _magicAttack;
+    protected SimpleProperty<bool> _alive;
+    protected MaxValueProperty _health;
 
     public Unit(string name) {
         _name = name;
         _props = new PropertyCollection();
         _triggers = new TriggerCollection();
+
+        _alive = _props.Add(new SimpleProperty<bool>(PropertyType.Alive, true));
 
         _props.Add(new ValueProperty(PropertyType.Vitality, 10));
         _props.Add(new ValueProperty(PropertyType.Strength, 10));
@@ -32,7 +26,7 @@ public class Unit {
         _props.Add(new ValueProperty(PropertyType.Agility, 10));
 
         // BattleProperties
-        _props.Add(new ValueProperty(PropertyType.MaxHealth, 100, 1));
+        _health = _props.Add(new MaxValueProperty(PropertyType.Health, 100));
         _props.Add(new ValueProperty(PropertyType.PhysicAttack, 10, 1));
         _props.Add(new ValueProperty(PropertyType.MagicAttack, 10f, 1));
         _props.Add(new ValueProperty(PropertyType.PhysicDefense, 0));
@@ -76,15 +70,13 @@ public class Unit {
     }
 
     public void UpdateBattleProperties() {
-        _props[PropertyType.MaxHealth].Base = _props[PropertyType.Vitality].Value * 10.0f;
+        _props.Get<MaxValueProperty>(PropertyType.Health).Base = _props[PropertyType.Vitality].Value * 10.0f;
         _props[PropertyType.PhysicAttack].Base = _props[PropertyType.Strength].Value * 1.0f;
         _props[PropertyType.MagicAttack].Base = _props[PropertyType.Intelligence].Value * 1.0f;
         _props[PropertyType.Speed].Base = _props[PropertyType.Agility].Value * 10.0f;
-
-        _health = _props[PropertyType.MaxHealth].Value;
     }
 
-    public bool Dead => (_health <= 0f);
+    public bool Alive => _alive.Value;
 
     public void Attack() {
 

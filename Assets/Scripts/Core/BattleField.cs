@@ -4,7 +4,7 @@
 public static class UnitFilter {
     public delegate bool Filter(Unit unit, params object[] args);
 
-    public static bool Alive(Unit unit, params object[] _) => !unit.Dead;
+    public static bool Alive(Unit unit, params object[] _) => unit.Alive;
 }
 
 public class BattleGroup {

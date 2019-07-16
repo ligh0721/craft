@@ -4,6 +4,8 @@ using System.ComponentModel;
 public enum PropertyType {
     [Description("未设置")]
     None,
+    [Description("活着的")]
+    Alive,
     [Description("力量，影响负重能力以及物理攻击的威力")]
     Strength,
     [Description("敏捷，影响速度")]
@@ -13,8 +15,8 @@ public enum PropertyType {
     [Description("体力，影响最大生命值的多少")]
     Vitality,
     //Mentality,
-    [Description("最大生命值")]
-    MaxHealth,
+    [Description("生命值")]
+    Health,
     [Description("物理攻击力")]
     PhysicAttack,
     [Description("魔法攻击力")]
@@ -54,9 +56,9 @@ public class ValueProperty : Property {
         get => _base;
 
         set {
-            _base = value;
             _value = _a * value + _b;
             _value = _value < _min ? _min : (_value > _max ? _max : _value);
+            _base = value;
         }
     }
 
@@ -66,9 +68,9 @@ public class ValueProperty : Property {
         get => _a;
 
         set {
-            _a = value;
             _value = value * _base + _b;
             _value = _value < _min ? _min : (_value > _max ? _max : _value);
+            _a = value;
         }
     }
 
@@ -78,9 +80,9 @@ public class ValueProperty : Property {
         get => _b;
 
         set {
-            _b = value;
             _value = _a * _base + value;
             _value = _value < _min ? _min : (_value > _max ? _max : _value);
+            _b = value;
         }
     }
 
@@ -90,11 +92,10 @@ public class ValueProperty : Property {
         get => _min;
 
         set {
-            _min = value;
-            _value = _a * _base + _b;
             if (_value < value) {
                 _value = value;
             }
+            _min = value;
         }
     }
 
@@ -104,11 +105,10 @@ public class ValueProperty : Property {
         get => _max;
 
         set {
-            _max = value;
-            _value = _a * _base + _b;
             if (_value > value) {
                 _value = value;
             }
+            _max = value;
         }
     }
 
@@ -116,7 +116,7 @@ public class ValueProperty : Property {
 
     public float Value => _value;
 
-    public ValueProperty(PropertyType type, float @base, float min = 0f, float max = 999999f, float a = 1f, float b = 0f)
+    public ValueProperty(PropertyType type, float @base, float min = 0, float max = 999999, float a = 1, float b = 0)
         : base(type) {
         _base = @base;
         _min = min;
@@ -168,7 +168,10 @@ public class SimpleProperty<TYPE> : Property {
 public class MaxValueProperty : Property {
     protected float _current;
 
-    public float Current => _current;
+    public float Current {
+        get => _current;
+        set => _current = (_overflow == false && value > _max.Value) ? _max.Value : value;
+    }
 
     protected ValueProperty _max;
 
@@ -177,54 +180,58 @@ public class MaxValueProperty : Property {
     public bool Overflow {
         get => _overflow;
         set {
-            if (value == _overflow || value == false) {
+            if (value == _overflow) {
                 return;
             }
-            if (_current > _max.Value) {
+            if (value == false && _current > _max.Value) {
                 _current = _max.Value;
             }
             _overflow = value;
         }
     }
 
-    public MaxValueProperty(PropertyType type, float @base, float max = 999999f, float a = 1f, float b = 0f, bool overflow = false)
+    public MaxValueProperty(PropertyType type, float @base, float max = 999999, float a = 1, float b = 0, bool overflow = false)
         : base(type) {
         _max = new ValueProperty(type, @base, float.Epsilon, max, a, b);
         _overflow = overflow;
+        _current = _max.Value;
     }
 
     public float Base {
         get => _max.Base;
         set {
+            float old = _max.Value;
             _max.Base = value;
+            _current *= _max.Value / old;
         }
     }
 
     public float A {
         get => _max.A;
         set {
+            float old = _max.Value;
             _max.A = value;
+            _current *= _max.Value / old;
         }
     }
 
     public float B {
         get => _max.B;
         set {
+            float old = _max.Value;
             _max.B = value;
-        }
-    }
-
-    public float Min {
-        get => _max.Min;
-        set {
-            _max.Min = value;
+            _current *= _max.Value / old;
         }
     }
 
     public float Max {
         get => _max.Max;
         set {
+            float old = _max.Value;
             _max.Max = value;
+            _current *= _max.Value / old;
         }
     }
+
+    public float Value => _max.Value;
 }

@@ -28,6 +28,19 @@ public class TestPanel : MonoBehaviour {
         _text.B().C("61fa68").T("t5word").C("5df3f5").T("@").C("61fa68").T("tmac").C("6771fe").T(" ~/proj/craft\n").Print();
         _text.B().C("e5b0ff").T("胖子").E().T("进行了").C("6771fe").T("魔法").E().T("攻击\n").Print();
 
-        MaxValueProperty mp = new MaxValueProperty(PropertyType.Agility, 10, 100);
+        MaxValueProperty hp = new MaxValueProperty(PropertyType.Health, 10, 100);
+        Debug.LogFormat("HP: {0}/{1}", hp.Current, hp.Value);
+        hp.Current = 5;
+        Debug.LogFormat("HP: {0}/{1}", hp.Current, hp.Value);
+        hp.Overflow = true;
+        hp.Current = 15;
+        Debug.LogFormat("HP: {0}/{1}", hp.Current, hp.Value);
+        hp.Overflow = false;
+        Debug.LogFormat("HP: {0}/{1}", hp.Current, hp.Value);
+        hp.Base = 150;
+        hp.Current = 25;
+        Debug.LogFormat("HP: {0}/{1}", hp.Current, hp.Value);
+        hp.Base = 10;
+        Debug.LogFormat("HP: {0}/{1}", hp.Current, hp.Value);
     }
 }
