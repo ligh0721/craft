@@ -74,7 +74,15 @@ public class Skill : ITrigger {
         throw new System.NotImplementedException();
     }
 
-    public bool OnDamageTarget(Unit target, float value) {
+    public bool OnDamaged(Unit target, AttackData attackData) {
+        throw new System.NotImplementedException();
+    }
+
+    public bool OnDamageTarget(Unit target, AttackData attackData) {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnHpChanged(float changed) {
         throw new System.NotImplementedException();
     }
 }

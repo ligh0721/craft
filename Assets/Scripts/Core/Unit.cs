@@ -108,11 +108,17 @@ public class Unit {
 
     public void Damaged(Unit source, AttackData ad) {
         float physicalDef = _props.GetFloatValue(PropertyType.PhysicDefense);
-        ad.Physical *= (1.00f - physicalDef / (physicalDef + 100));
+        ad.Physical *= 1.00f - physicalDef / (physicalDef + 100);
         float magicDef = _props.GetFloatValue(PropertyType.MagicDefense);
-        ad.Magic *= (1.00f - magicDef / (magicDef + 100));
+        ad.Magic *= 1.00f - magicDef / (magicDef + 100);
+        if (source == null || _triggers.TriggerOnDamaged(source, ad) == false) {
+            return;
+        }
         if (source == null || source.Triggers.TriggerOnDamageTarget(this, ad) == false) {
             return;
         }
+
+        float damage = ad.Physical + ad.Magic;
+        _triggers.TriggerOnHpChanged(damage);
     }
 }
