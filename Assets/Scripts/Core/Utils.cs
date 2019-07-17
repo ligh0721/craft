@@ -13,25 +13,25 @@ public static class Utils {
 
     public static bool Chance(float chance) => chance > 0.00f && _rnd.NextDouble() < chance;
 
-    public static int AllyMask(int force1, int force2, params int[] forces) {
-        int mask = (1 << force1) | (1 << force2);
-        foreach (var force in forces) {
+    public static int AllyMask(int force1, params int[] otherForces) {
+        int mask = 1 << force1;
+        foreach (var force in otherForces) {
             mask |= 1 << force;
         }
         return mask;
     }
 
-    public static Relation ForceRelation(int force, int targetForce, int allyMask) {
+    public static RelationFlags ForceRelation(int force, int targetForce, int allyMask) {
         if (force == targetForce) {
-            return Relation.Self;
+            return RelationFlags.Self;
         }
-        return (targetForce & allyMask) != 0 ? Relation.Ally : Relation.Enemy;
+        return ((1 << targetForce) & allyMask) != 0 ? RelationFlags.Ally : RelationFlags.Enemy;
     }
 
-    public static bool CanEffect(Unit unit, Unit target, Relation effective) {
+    public static bool CanBeTargetedAt(Unit unit, Unit target, RelationFlags targetRelation) {
         int force = unit.GetIntProperty(PropertyType.BattleForce);
-        int allyMask = unit.GetIntProperty(PropertyType.BattleForceMask);
-        int targetForce = unit.GetIntProperty(PropertyType.BattleForce);
-        return (ForceRelation(force, targetForce, allyMask) & effective) != 0;
+        int allyMask = unit.GetIntProperty(PropertyType.BattleForceAllyMask);
+        int targetForce = target.GetIntProperty(PropertyType.BattleForce);
+        return (ForceRelation(force, targetForce, allyMask) & targetRelation) != 0;
     }
 }

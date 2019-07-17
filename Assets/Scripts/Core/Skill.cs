@@ -1,5 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Collections;
+﻿public enum TargetType {
+    None,
+    One,
+    Group,
+    Force,
+    All,
+}
 
 public class Skill : ITrigger {
     protected string _name;
@@ -24,24 +29,14 @@ public class Skill : ITrigger {
 
     protected float _cooldownElapsed;
 
-    protected Relation _effective;
-
-    public Relation Effective => _effective;
-
-    protected RangeType _range;
-
-    public RangeType Range => _range;
-
     protected TriggerType[] _triggerTypes;
 
     public TriggerType[] TriggerTypes => _triggerTypes;
 
-    public Skill(string name, float cooldown, Relation effective, RangeType range, params TriggerType[] triggerTypes) {
+    public Skill(string name, float cooldown, params TriggerType[] triggerTypes) {
         _name = name;
         _owner = null;
         _cooldown = cooldown;
-        _effective = effective;
-        _range = range;
         _triggerTypes = triggerTypes;
         _cooldownElapsed = 0;
     }
@@ -56,55 +51,89 @@ public class Skill : ITrigger {
         _owner = null;
     }
 
-    public void StartCoolingdown() {
-        _cooldownElapsed = 0;
-    }
+    public void StartCooldown() => _cooldownElapsed = 0;
+
+    public void ResetCooldown() => _cooldownElapsed = RealCooldown;
 
     public void Update(float delta) => _cooldownElapsed += delta;
 
-    protected void OnAdd() {
+    public bool Ready => _cooldownElapsed >= RealCooldown;
+
+    protected virtual void OnAdd() {
 
     }
 
-    protected void OnRemove() {
+    protected virtual void OnRemove() {
 
     }
 
-    public bool OnAttackTarget(Unit target, AttackData attackData) {
+    public virtual bool OnAttackTarget(Unit target, AttackData attackData) {
         throw new System.NotImplementedException();
     }
 
-    public bool OnDamaged(Unit target, AttackData attackData) {
+    public virtual bool OnDamaged(Unit target, AttackData attackData) {
         throw new System.NotImplementedException();
     }
 
-    public bool OnDamageTarget(Unit target, AttackData attackData) {
+    public virtual bool OnDamageTarget(Unit target, AttackData attackData) {
         throw new System.NotImplementedException();
     }
 
-    public void OnHpChanged(float changed) {
+    public virtual void OnHpChanged(float changed) {
         throw new System.NotImplementedException();
     }
 }
 
 public class ActiveSkill : Skill {
-    public ActiveSkill(string name, float cooldown, Relation effective, RangeType range, params TriggerType[] triggerTypes)
-        : base(name, cooldown, effective, range, triggerTypes) {
+    protected RelationFlags _targetRelation;
+
+    public RelationFlags TargetRelation => _targetRelation;
+
+    protected TargetType _targetType;
+
+    public TargetType TargetType => _targetType;
+
+    public ActiveSkill(string name, float cooldown, RelationFlags targetRelation, TargetType targetType)
+        : base(name, cooldown) {
+        _targetRelation = targetRelation;
+        _targetType = targetType;
     }
 
-    public void Cast(Unit one) {
-
+    public bool Cast(ITargetUnits target) {
+        if (!Ready) {
+            return false;
+        }
+        if (OnCast(target) == false) {
+            return false;
+        }
+        StartCooldown();
+        OnFinishCasting(target);
+        return true;
     }
 
-    public void Cast(BattleGroup group) {
-
+    protected virtual bool OnCast(ITargetUnits target) {
+        return true;
     }
 
-    public void Cast(BattleForce force) {
+    protected virtual void OnFinishCasting(ITargetUnits target) {
+    }
+}
 
+public class AttackAct : ActiveSkill {
+    protected AttackFactors _factors;
+
+    public AttackAct(string name, float cooldown, TargetType targetType, AttackFactors factors)
+        : base(name, cooldown, RelationFlags.Enemy, targetType) {
+        _factors = factors;
     }
 
-    public void Cast(BattleField all) {
-
+    protected override void OnFinishCasting(ITargetUnits target) {
+        for (var it = target.GetUnitEnumerator(UnitFilter.AliveCanBeTargetedAt, _owner, _targetRelation); it.MoveNext();) {
+            AttackData ad = _owner.Attack(it.Current, _factors);
+            if (ad == null) {
+                continue;
+            }
+            it.Current.Damaged(_owner, ad);
+        }
     }
 }

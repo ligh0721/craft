@@ -36,7 +36,7 @@ public enum PropertyType {
     [Description("战斗势力")]
     BattleForce,
     [Description("战斗势力结盟掩码")]
-    BattleForceMask,
+    BattleForceAllyMask,
     [Description("战斗组")]
     BattleGroup,
 }

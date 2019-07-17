@@ -1,5 +1,34 @@
 ﻿using System.Collections.Generic;
 
+public class AttackFactors {
+    private float _physicalFactorA;
+
+    public float PhysicalFactorA => _physicalFactorA;
+
+    private float _physicalFactorB;
+
+    public float PhysicalFactorB => _physicalFactorB;
+
+    private float _magicFactorA;
+
+    public float MagicFactorA => _magicFactorA;
+
+    private float _magicFactorB;
+
+    public float MagicFactorB => _magicFactorB;
+
+    private float _criticalRateFactor;
+
+    public float CriticalRateFactor => _criticalRateFactor;
+
+    public AttackFactors(float physicalFactorA = 1, float physicalFactorB = 0, float magicFactorA = 1, float magicFactorB = 0, float criticalRateFactor = 1) {
+        _physicalFactorA = physicalFactorA;
+        _physicalFactorB = physicalFactorB;
+        _magicFactorA = magicFactorA;
+        _magicFactorB = magicFactorB;
+        _criticalRateFactor = criticalRateFactor;
+    }
+}
 
 public class Unit {
     protected string _name;
@@ -18,6 +47,7 @@ public class Unit {
         _name = name;
         _props = new PropertyCollection();
         _triggers = new TriggerCollection();
+        _skills = new Dictionary<string, Skill>();
 
         _alive = _props.AddProperty(PropertyType.Alive, new BoolProperty(true));
 
@@ -38,17 +68,18 @@ public class Unit {
         _props.AddProperty(PropertyType.CooldownReduction, new ValueProperty(0, -10.0f, 0.80f));
 
         _props.AddProperty(PropertyType.BattleForce, new IntProperty(0));
+        _props.AddProperty(PropertyType.BattleForceAllyMask, new IntProperty(0));
         _props.AddProperty(PropertyType.BattleGroup, new IntProperty(0));
         UpdateBattleProperties();
     }
 
-    public void AddProperty(PropertyType type, Property prop) => _props.AddProperty(type, prop);
+    public PROPERTY AddProperty<PROPERTY>(PropertyType type, PROPERTY prop) where PROPERTY : Property => _props.AddProperty(type, prop);
 
     public void RemoveProperty(PropertyType type) => _props.RemoveProperty(type);
 
-    public Property GetPropertyObject(PropertyType type) => _props.GetProperty(type);
+    public Property GetProperty(PropertyType type) => _props.GetProperty(type);
 
-    public PROPERTY GetPropertyObject<PROPERTY>(PropertyType type) where PROPERTY : Property => _props.GetProperty<PROPERTY>(type);
+    public PROPERTY GetProperty<PROPERTY>(PropertyType type) where PROPERTY : Property => _props.GetProperty<PROPERTY>(type);
 
     public float GetFloatProperty(PropertyType type, float @default = 0) => _props.GetFloatValue(type, @default);
 
@@ -58,7 +89,7 @@ public class Unit {
 
     public string GetStrProperty(PropertyType type, string @default = "") => _props.GetStrValue(type, @default);
 
-    public Skill AddSkill(Skill skill) {
+    public SKILL AddSkill<SKILL>(SKILL skill) where SKILL : Skill {
         skill.AddToUnit(this);
         foreach (var triggerType in skill.TriggerTypes) {
             _triggers.AddTrigger(triggerType, skill);
@@ -87,11 +118,11 @@ public class Unit {
 
     public bool Alive => _alive.Value;
 
-    public AttackData Attack(Unit target, float physicalFactorA = 1, float physicalFactorB = 0, float magicFactorA = 1, float magicFactorB = 0, float criticalRateFactor = 1) {
-        float criticalRate = _props.GetFloatValue(PropertyType.CriticalRate) * criticalRateFactor;
+    public AttackData Attack(Unit target, AttackFactors factors) {
+        float criticalRate = _props.GetFloatValue(PropertyType.CriticalRate) * factors.CriticalRateFactor;
         
-        float physical = _props.GetFloatValue(PropertyType.PhysicAttack) * physicalFactorA + physicalFactorB;
-        float magic = _props.GetFloatValue(PropertyType.MagicAttack) * magicFactorA + magicFactorB;
+        float physical = _props.GetFloatValue(PropertyType.PhysicAttack) * factors.PhysicalFactorA + factors.PhysicalFactorB;
+        float magic = _props.GetFloatValue(PropertyType.MagicAttack) * factors.MagicFactorA + factors.MagicFactorB;
         bool critical = Utils.Chance(criticalRate);
         if (critical) {
             float criticalDamage = _props.GetFloatValue(PropertyType.CriticalDamage, 1.00f);
@@ -119,6 +150,9 @@ public class Unit {
         }
 
         float damage = ad.Physical + ad.Magic;
-        _triggers.TriggerOnHpChanged(damage);
+        if (damage > 0) {
+            _health.Current -= damage;
+            _triggers.TriggerOnHpChanged(damage);
+        }
     }
 }
