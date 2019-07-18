@@ -103,6 +103,37 @@ public class ActiveSkill : Skill {
         if (!Ready) {
             return false;
         }
+
+        switch (_targetType) {
+        case TargetType.None:
+            if (!(target is NoTarget)) {
+                return false;
+            }
+            break;
+        case TargetType.One:
+            if (!(target is OneTarget)) {
+                return false;
+            }
+            break;
+        case TargetType.Group:
+            if (!(target is GroupTarget)) {
+                return false;
+            }
+            break;
+        case TargetType.Force:
+            if (!(target is ForceTarget)) {
+                return false;
+            }
+            break;
+        case TargetType.All:
+            if (!(target is AllTarget)) {
+                return false;
+            }
+            break;
+        default:
+            return false;
+        }
+
         if (OnCast(target) == false) {
             return false;
         }

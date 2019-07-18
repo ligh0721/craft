@@ -81,7 +81,8 @@ public class ForceTarget : ITargetUnits {
 
     public void AddUnit(int group, Unit unit) {
         if (_groups.TryGetValue(group, out var battleGroup) == false) {
-            _groups.Add(group, new GroupTarget(group));
+            battleGroup = new GroupTarget(group);
+            _groups.Add(group, battleGroup);
         }
         battleGroup.AddUnit(unit);
     }
@@ -110,7 +111,8 @@ public class AllTarget : ITargetUnits {
 
     public void AddUnit(Unit unit, int force, int group) {
         if (_forces.TryGetValue(force, out var forceObj) == false) {
-            _forces.Add(force, new ForceTarget(force));
+            forceObj = new ForceTarget(force);
+            _forces.Add(force, forceObj);
         }
         forceObj.AddUnit(group, unit);
     }
