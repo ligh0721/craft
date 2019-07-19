@@ -341,6 +341,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _content: {fileID: 9183887748025820234}
   _itemTemplate: {fileID: 5546752400061622501}
+  _maxLines: 100
 --- !u!1 &9183887748702953427
 GameObject:
   m_ObjectHideFlags: 0
