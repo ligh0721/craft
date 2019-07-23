@@ -45,7 +45,7 @@ public class OneTarget : ITargetUnits {
     }
 
     public IEnumerator<Unit> GetUnitEnumerator(UnitFilter.Filter filter = null, params object[] args) {
-        if (filter != null && filter(_one, args)) {
+        if (filter == null || filter(_one, args)) {
             yield return _one;
         }
     }
@@ -69,7 +69,7 @@ public class GroupTarget : ITargetUnits {
 
     public IEnumerator<Unit> GetUnitEnumerator(UnitFilter.Filter filter = null, params object[] args) {
         for (var iter = _units.GetEnumerator(); iter.MoveNext();) {
-            if (filter != null && filter(iter.Current, args)) {
+            if (filter == null || filter(iter.Current, args)) {
                 yield return iter.Current;
             }
         }

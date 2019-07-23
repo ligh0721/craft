@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class TestPanel : MonoBehaviour {
+public class Test : MonoBehaviour {
     public TextList _out;
-    public ForceItem _force;
+    public UnitForce _player;
+    public UnitForce _enemies;
 
     Unit _unit;
     Unit _unit2;
@@ -61,8 +62,11 @@ public class TestPanel : MonoBehaviour {
         ShowUnit(_unit2);
         ShowUnit(_unit3);
 
-        var force = _battle.AllTarget.GetForce(2);
-        _force.SetForce(force);
+        var playerForce = _battle.AllTarget.GetForce(1);
+        var enemiesForce = _battle.AllTarget.GetForce(2);
+        _player.SetForce(playerForce);
+        _enemies.SetForce(enemiesForce);
+        
     }
 
     // Update is called once per frame
