@@ -6,6 +6,8 @@ public enum PropertyType {
     None,
     [Description("活着的")]
     Alive,
+    [Description("等级")]
+    Level,
     [Description("力量，影响负重能力以及物理攻击的威力")]
     Strength,
     [Description("敏捷，影响速度")]
@@ -42,6 +44,21 @@ public enum PropertyType {
 }
 
 public abstract class Property {
+    protected string _name;
+
+    public string Name => _name;
+
+    protected string _format;
+
+    public string Format {
+        set => _format = value;
+        get => _format;
+    }
+
+    protected Property(string name, string format) {
+        _name = name;
+        _format = format;
+    }
 }
 
 public interface IFloatValue {
@@ -127,13 +144,18 @@ public class ValueProperty : Property, IFloatValue {
 
     public float Value => _value;
 
-    public ValueProperty(float @base, float min = 0, float max = 999999, float a = 1, float b = 0) {
+    public ValueProperty(string name, float @base, float min = 0, float max = 999999, float a = 1, float b = 0, string format = "N0")
+        : base(name, format) {
         _base = @base;
         _min = min;
         _max = max;
         _a = a;
         _b = b;
         _value = a * @base + b;
+    }
+
+    public override string ToString() {
+        return _value.ToString(_format);
     }
 }
 
@@ -142,33 +164,42 @@ public class SimpleProperty<TYPE> : Property {
 
     public TYPE Value { get => _value; set => _value = value; }
 
-    public SimpleProperty(TYPE value) {
+    public SimpleProperty(string name, TYPE value, string format = "")
+        : base(name, format) {
         _value = value;
     }
 }
 
 public class FloatProperty : SimpleProperty<float>, IFloatValue {
-    public FloatProperty(float value)
-        : base(value) {
+    public FloatProperty(string name, float value, string format = "N0")
+        : base(name, value, format) {
     }
+
+    public override string ToString() => _value.ToString(_format);
 }
 
 public class IntProperty : SimpleProperty<int>, IIntValue {
-    public IntProperty(int value)
-        : base(value) {
+    public IntProperty(string name, int value, string format = "N0")
+        : base(name, value, format) {
     }
+
+    public override string ToString() => _value.ToString(_format);
 }
 
 public class BoolProperty : SimpleProperty<bool>, IBoolValue {
-    public BoolProperty(bool value)
-        : base(value) {
+    public BoolProperty(string name, bool value)
+        : base(name, value) {
     }
+
+    public override string ToString() => _value.ToString();
 }
 
 public class StrProperty : SimpleProperty<string>, IStrValue {
-    public StrProperty(string value)
-        : base(value) {
+    public StrProperty(string name, string value)
+        : base(name, value) {
     }
+
+    public override string ToString() => _value;
 }
 
 public class MaxValueProperty : Property, IFloatValue {
@@ -196,8 +227,9 @@ public class MaxValueProperty : Property, IFloatValue {
         }
     }
 
-    public MaxValueProperty(float @base, float max = 999999, float a = 1, float b = 0, bool overflow = false) {
-        _max = new ValueProperty(@base, float.Epsilon, max, a, b);
+    public MaxValueProperty(string name, float @base, float max = 999999, float a = 1, float b = 0, bool overflow = false, string format = "N0")
+        : base(name, format) {
+        _max = new ValueProperty(name, @base, float.Epsilon, max, a, b, format);
         _overflow = overflow;
         _current = _max.Value;
     }
@@ -239,6 +271,8 @@ public class MaxValueProperty : Property, IFloatValue {
     }
 
     public float Value => _max.Value;
+
+    public override string ToString() => $"{Current.ToString(_format)}/{_max.ToString()}";
 }
 
 public class PropertyCollection {

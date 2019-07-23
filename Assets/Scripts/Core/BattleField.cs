@@ -2,6 +2,9 @@
 
 public class BattleField {
     protected AllTarget _targetUnits;
+
+    public AllTarget AllTarget => _targetUnits;
+
     protected Dictionary<int, int> _forceAllyMasks;
 
     public BattleField() {
@@ -9,9 +12,7 @@ public class BattleField {
         _forceAllyMasks = new Dictionary<int, int>();
     }
 
-    public void ForceAlly(int force1, params int[] otherForces) {
-        _forceAllyMasks.Add(force1, Utils.AllyMask(force1, otherForces));
-    }
+    public void ForceAlly(int force1, params int[] otherForces) => _forceAllyMasks.Add(force1, Utils.AllyMask(force1, otherForces));
 
     public void AddUnit(Unit unit, int force, int group) {
         if (_forceAllyMasks.TryGetValue(force, out var allyMask) == false) {

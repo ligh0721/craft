@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 public class AttackFactors {
     private float _physicalFactorA;
@@ -30,7 +31,7 @@ public class AttackFactors {
     }
 }
 
-public class Unit {
+public class Unit : IComparable {
     protected string _name;
 
     public string Name => _name;
@@ -49,27 +50,29 @@ public class Unit {
         _triggers = new TriggerCollection();
         _skills = new Dictionary<string, Skill>();
 
-        _alive = _props.AddProperty(PropertyType.Alive, new BoolProperty(true));
+        _alive = _props.AddProperty(PropertyType.Alive, new BoolProperty("活着", true));
 
-        _props.AddProperty(PropertyType.Vitality, new ValueProperty(10));
-        _props.AddProperty(PropertyType.Strength, new ValueProperty(10));
-        _props.AddProperty(PropertyType.Intelligence, new ValueProperty(10));
-        _props.AddProperty(PropertyType.Agility, new ValueProperty(10));
+        _props.AddProperty(PropertyType.Level, new IntProperty("等级", 1));
+
+        _props.AddProperty(PropertyType.Vitality, new ValueProperty("体力", 10));
+        _props.AddProperty(PropertyType.Strength, new ValueProperty("力量", 10));
+        _props.AddProperty(PropertyType.Intelligence, new ValueProperty("智力", 10));
+        _props.AddProperty(PropertyType.Agility, new ValueProperty("敏捷", 10));
 
         // BattleProperties
-        _health = _props.AddProperty(PropertyType.Health, new MaxValueProperty(100));
-        _props.AddProperty(PropertyType.PhysicAttack, new ValueProperty(10, 1));
-        _props.AddProperty(PropertyType.MagicAttack, new ValueProperty(10f, 1));
-        _props.AddProperty(PropertyType.PhysicDefense, new ValueProperty(0));
-        _props.AddProperty(PropertyType.MagicDefense, new ValueProperty(0));
-        _props.AddProperty(PropertyType.Speed, new ValueProperty(100, max: 2000));
-        _props.AddProperty(PropertyType.CriticalRate, new ValueProperty(0.00f, max: 1.00f));
-        _props.AddProperty(PropertyType.CriticalDamage, new ValueProperty(1.50f, 1.00f));
-        _props.AddProperty(PropertyType.CooldownReduction, new ValueProperty(0, -10.0f, 0.80f));
+        _health = _props.AddProperty(PropertyType.Health, new MaxValueProperty("生命", 100));
+        _props.AddProperty(PropertyType.PhysicAttack, new ValueProperty("物理攻击", 10, 1));
+        _props.AddProperty(PropertyType.MagicAttack, new ValueProperty("魔法攻击", 10, 1));
+        _props.AddProperty(PropertyType.PhysicDefense, new ValueProperty("物理防御", 0));
+        _props.AddProperty(PropertyType.MagicDefense, new ValueProperty("魔法防御", 0));
+        _props.AddProperty(PropertyType.Speed, new ValueProperty("速度", 100, max: 2000));
+        _props.AddProperty(PropertyType.CriticalRate, new ValueProperty("暴击率", 0.00f, max: 1.00f, format: "P0"));
+        _props.AddProperty(PropertyType.CriticalDamage, new ValueProperty("暴击伤害", 1.50f, 1.00f, format: "P0"));
+        _props.AddProperty(PropertyType.CooldownReduction, new ValueProperty("冷却时间降低", 0, -10.0f, 0.80f, format: "P0"));
 
-        _props.AddProperty(PropertyType.BattleForce, new IntProperty(0));
-        _props.AddProperty(PropertyType.BattleForceAllyMask, new IntProperty(0));
-        _props.AddProperty(PropertyType.BattleGroup, new IntProperty(0));
+        _props.AddProperty(PropertyType.BattleForce, new IntProperty("战斗势力", 0));
+        _props.AddProperty(PropertyType.BattleForceAllyMask, new IntProperty("战斗势力掩码", 0));
+        _props.AddProperty(PropertyType.BattleGroup, new IntProperty("战斗组", 0));
         UpdateBattleProperties();
     }
 
@@ -155,4 +158,6 @@ public class Unit {
             _triggers.TriggerOnHpChanged(damage);
         }
     }
+
+    public int CompareTo(object obj) => GetHashCode() - obj.GetHashCode();
 }

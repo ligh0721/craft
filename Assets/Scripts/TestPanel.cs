@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class TestPanel : MonoBehaviour {
     public TextList _out;
+    public ForceItem _force;
+
     Unit _unit;
     Unit _unit2;
     Unit _unit3;
@@ -39,16 +41,28 @@ public class TestPanel : MonoBehaviour {
         cridmg.Base = 2.00f;
         _act = _unit.AddSkill(new AttackAct("attack", 0, TargetType.One, new AttackFactors(magicFactorA: 0)));
 
-        _unit2 = CreateTestUnit("Enemy2");
-        _unit3 = CreateTestUnit("Enemy3");
+        _unit2 = CreateTestUnit("史莱姆皇帝");
+        _unit3 = CreateTestUnit("白金之星");
 
         _battle.AddUnit(_unit, 1, 1);
+
         _battle.AddUnit(_unit2, 2, 1);
-        _battle.AddUnit(_unit3, 3, 1);
+        _battle.AddUnit(CreateTestUnit("金属史莱姆"), 2, 1);
+        _battle.AddUnit(CreateTestUnit("岩石史莱姆"), 2, 1);
+        _battle.AddUnit(CreateTestUnit("火焰史莱姆"), 2, 1);
+
+        _battle.AddUnit(CreateTestUnit("野狼首领"), 2, 2);
+        _battle.AddUnit(CreateTestUnit("野狼"), 2, 2);
+        _battle.AddUnit(CreateTestUnit("野狼"), 2, 2);
+
+        _battle.AddUnit(_unit3, 3, 2);
 
         ShowUnit(_unit);
         ShowUnit(_unit2);
         ShowUnit(_unit3);
+
+        var force = _battle.AllTarget.GetForce(2);
+        _force.SetForce(force);
     }
 
     // Update is called once per frame

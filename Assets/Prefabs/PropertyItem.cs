@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public delegate void UpdateLayoutCallback();
 
+public delegate void OnButtonCallback();
+
 public class PropertyItem : MonoBehaviour {
     public Text _titleName;
     public Text _titleValue;
@@ -14,6 +16,8 @@ public class PropertyItem : MonoBehaviour {
     protected float _detailDropListMaxHeight;
 
     protected UpdateLayoutCallback _updateLayoutCallback;
+
+    protected OnButtonCallback _onButtonCallback;
 
     void Awake() {
         _detailDropList.gameObject.SetActive(false);
@@ -50,10 +54,21 @@ public class PropertyItem : MonoBehaviour {
     }
 
     public void OnButton() {
+        _onButtonCallback?.Invoke();
     }
+
+    public void SetOnButtonCallback(OnButtonCallback callback) => _onButtonCallback = callback;
 
     public void OnShowDetail() {
         _detailDropList.gameObject.SetActive(!_detailDropList.gameObject.activeSelf);
         UpdateLayout();
+    }
+
+    public void Clear() {
+        foreach (RectTransform child in _detailDropListContent.transform) {
+            if (child.gameObject != _dropListItemTemplate) {
+                Destroy(child.gameObject);
+            }
+        }
     }
 }

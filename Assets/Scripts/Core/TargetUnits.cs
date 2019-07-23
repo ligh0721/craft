@@ -20,10 +20,14 @@ public static class UnitFilter {
 }
 
 public interface ITargetUnits {
+    int UnitCount { get; }
+
     IEnumerator<Unit> GetUnitEnumerator(UnitFilter.Filter filter = null, params object[] args);
 }
 
 public class NoTarget : ITargetUnits {
+    public int UnitCount => 0;
+
     public IEnumerator<Unit> GetUnitEnumerator(UnitFilter.Filter filter = null, params object[] args) {
         yield return null;
     }
@@ -33,6 +37,8 @@ public class OneTarget : ITargetUnits {
     protected Unit _one;
 
     public Unit One => _one;
+
+    public int UnitCount => 1;
 
     public OneTarget(Unit one) {
         _one = one;
@@ -50,6 +56,8 @@ public class GroupTarget : ITargetUnits {
 
     public int Group => _group;
 
+    public int UnitCount => _units.Count;
+
     protected SortedSet<Unit> _units;
 
     public GroupTarget(int group) {
@@ -57,9 +65,7 @@ public class GroupTarget : ITargetUnits {
         _units = new SortedSet<Unit>();
     }
 
-    public void AddUnit(Unit unit) {
-        _units.Add(unit);
-    }
+    public bool AddUnit(Unit unit) => _units.Add(unit);
 
     public IEnumerator<Unit> GetUnitEnumerator(UnitFilter.Filter filter = null, params object[] args) {
         for (var iter = _units.GetEnumerator(); iter.MoveNext();) {
@@ -72,20 +78,34 @@ public class GroupTarget : ITargetUnits {
 
 public class ForceTarget : ITargetUnits {
     protected int _force;
+
+    public int Force => _force;
+
     protected SortedDictionary<int, GroupTarget> _groups;
+
+    protected int _unitCount;
+
+    public int UnitCount => _unitCount;
 
     public ForceTarget(int force) {
         _force = force;
         _groups = new SortedDictionary<int, GroupTarget>();
+        _unitCount = 0;
     }
 
-    public void AddUnit(int group, Unit unit) {
+    public bool AddUnit(int group, Unit unit) {
         if (_groups.TryGetValue(group, out var battleGroup) == false) {
             battleGroup = new GroupTarget(group);
             _groups.Add(group, battleGroup);
         }
-        battleGroup.AddUnit(unit);
+        var ret = battleGroup.AddUnit(unit);
+        if (ret) {
+            ++_unitCount;
+        }
+        return ret;
     }
+
+    public GroupTarget GetGroup(int group) => _groups.TryGetValue(group, out var groupTarget) == false ? null : groupTarget;
 
     public IEnumerator<GroupTarget> GetGroupEnumerator() {
         for (var groupIter = _groups.GetEnumerator(); groupIter.MoveNext();) {
@@ -105,17 +125,28 @@ public class ForceTarget : ITargetUnits {
 public class AllTarget : ITargetUnits {
     protected SortedDictionary<int, ForceTarget> _forces;
 
+    protected int _unitCount;
+
+    public int UnitCount => _unitCount;
+
     public AllTarget() {
         _forces = new SortedDictionary<int, ForceTarget>();
+        _unitCount = 0;
     }
 
-    public void AddUnit(Unit unit, int force, int group) {
+    public bool AddUnit(Unit unit, int force, int group) {
         if (_forces.TryGetValue(force, out var forceObj) == false) {
             forceObj = new ForceTarget(force);
             _forces.Add(force, forceObj);
         }
-        forceObj.AddUnit(group, unit);
+        var ret = forceObj.AddUnit(group, unit);
+        if (ret) {
+            ++_unitCount;
+        }
+        return ret;
     }
+
+    public ForceTarget GetForce(int force) => _forces.TryGetValue(force, out var forceTarget) == false ? null : forceTarget;
 
     public IEnumerator<ForceTarget> GetForceEnumerator() {
         for (var forceIter = _forces.GetEnumerator(); forceIter.MoveNext();) {
