@@ -37,6 +37,9 @@ public class Unit : IComparable {
     public string Name => _name;
 
     protected PropertyCollection _props;
+
+    public PropertyCollection Properties => _props;
+
     protected TriggerCollection _triggers;
     public TriggerCollection Triggers => _triggers;
     protected Dictionary<string, Skill> _skills;

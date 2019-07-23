@@ -5,6 +5,7 @@ public class Test : MonoBehaviour {
     public TextList _out;
     public UnitForce _player;
     public UnitForce _enemies;
+    public ItemDetailPanel _detailPanel;
 
     Unit _unit;
     Unit _unit2;
@@ -66,7 +67,9 @@ public class Test : MonoBehaviour {
         var enemiesForce = _battle.AllTarget.GetForce(2);
         _player.SetForce(playerForce);
         _enemies.SetForce(enemiesForce);
-        
+
+        _detailPanel.SetTitle(_unit.Name);
+        _detailPanel.SetPropertyCollection(_unit.Properties);
     }
 
     // Update is called once per frame
