@@ -13,13 +13,13 @@ public class UnitForce : MonoBehaviour {
     void Start() {
     }
 
-    public void SetForce(ForceTarget force) {
+    public void SetForce(ForceTarget force, OnUnitClickCallback onUnitClickCallback = null) {
         _force = force;
         for (var it = _force.GetGroupEnumerator(); it.MoveNext();) {
             var group = it.Current;
             var item = Instantiate(_itemTemplate);
             var itemGroup = item.GetComponent<UnitGroup>();
-            itemGroup.SetGroup(group);
+            itemGroup.SetGroup(group, onUnitClickCallback);
             item.SetParent(_itemTemplate.parent, false);
             item.gameObject.SetActive(true);
         }

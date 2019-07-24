@@ -2,10 +2,12 @@
 using UnityEngine.UI;
 
 public class Test : MonoBehaviour {
+    public PanelLayer _panelLayler;
     public TextList _out;
     public UnitForce _player;
     public UnitForce _enemies;
     public ItemDetailPanel _detailPanel;
+
 
     Unit _unit;
     Unit _unit2;
@@ -65,11 +67,15 @@ public class Test : MonoBehaviour {
 
         var playerForce = _battle.AllTarget.GetForce(1);
         var enemiesForce = _battle.AllTarget.GetForce(2);
-        _player.SetForce(playerForce);
-        _enemies.SetForce(enemiesForce);
+        _player.SetForce(playerForce, OnUnitClick);
+        _enemies.SetForce(enemiesForce, OnUnitClick);
+    }
 
-        _detailPanel.SetTitle(_unit.Name);
-        _detailPanel.SetPropertyCollection(_unit.Properties);
+    void OnUnitClick(Unit unit) {
+        var detailPanel = Instantiate(_detailPanel);
+        detailPanel.SetTitle(unit.Name);
+        detailPanel.SetPropertyCollection(unit.Properties);
+        _panelLayler.OpenPanel(detailPanel.gameObject);
     }
 
     // Update is called once per frame
