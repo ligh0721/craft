@@ -1,6 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.UI;
+
 
 public class Test : MonoBehaviour {
     public PanelLayer _panelLayler;
@@ -20,13 +27,6 @@ public class Test : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         _rich = new RichTextBuilder();
-        RelationFlags te = RelationFlags.Ally | RelationFlags.Self;
-        Debug.LogFormat("{0}", te);
-
-        Color c = new Color(1.0f, 1.0f, 1.0f);
-        Debug.Log(c.ToString());
-        Color32 c2 = new Color32(255, 128, 125, 255);
-        Debug.Log(ColorUtility.ToHtmlStringRGB(c2));
 
         _out.AddItem(_rich.B().C("61fa68").T("t5word").C("5df3f5").T("@").C("61fa68").T("tmac").C("6771fe").T(" ~/proj/craft").Print());
         _out.AddItem(_rich.B().C("e5b0ff").T("胖子").E().T("进行了").C("6771fe").T("魔法").E().T("攻击").Print());
@@ -119,19 +119,16 @@ public class Test : MonoBehaviour {
         _act.Cast(new OneTarget(_unit3));
         ShowUnit(_unit2);
         ShowUnit(_unit3);
-		var s = new PlayerState();
-        s.GenTestData();
-        PlayerSaveManager.Save(s, 0);
 
-        SerialHashSet<int> ss = new HashSet<int>();
-        ss.ToSet().Add(5);
-        ss.ToSet().Add(6);
-        Debug.Log(JsonUtility.ToJson(ss));
-
+        PlayerSaveManager.GenTestSaves();
     }
 
     public void OnBtnTest1() {
         var s = PlayerSaveManager.Load(0);
-        Debug.Log(s.ToString());
+        var dt = s.playTime - DateTime.MinValue;
+        _out.AddItem($"{(int)dt.TotalHours:D2}:{dt.Minutes:D2}");
+
+        dt = s.gameDate - DateTime.MinValue;
+        _out.AddItem($"{(int)dt.TotalDays + 1} Days");
     }
 }
