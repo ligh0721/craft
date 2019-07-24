@@ -10,10 +10,13 @@ using UnityEngine;
 public class SubState {
     [SerializeField]
     string name;
+
     [SerializeField]
     List<string> testList;
+
     [SerializeField]
     SerialDictBase<int, int, Dictionary<int, int>> testDict;
+
     [SerializeField]
     SerialHashSet<int> testSet;
 
@@ -108,7 +111,7 @@ public class SerialSortedDict<KEY, VALUE> : SerialDictBase<KEY, VALUE, SortedDic
 }
 
 [Serializable]
-public abstract class SerialSetBase<VALUE, SET> : ISerializationCallbackReceiver where SET : ISet<VALUE>, new() {
+public class SerialSetBase<VALUE, SET> : ISerializationCallbackReceiver where SET : ISet<VALUE>, new() {
     protected SET _target;
 
     [SerializeField]

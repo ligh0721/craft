@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class Test : MonoBehaviour {
@@ -121,7 +122,13 @@ public class Test : MonoBehaviour {
 		var s = new PlayerState();
         s.GenTestData();
         PlayerSaveManager.Save(s, 0);
-	}
+
+        SerialHashSet<int> ss = new HashSet<int>();
+        ss.ToSet().Add(5);
+        ss.ToSet().Add(6);
+        Debug.Log(JsonUtility.ToJson(ss));
+
+    }
 
     public void OnBtnTest1() {
         var s = PlayerSaveManager.Load(0);
