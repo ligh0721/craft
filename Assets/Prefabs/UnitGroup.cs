@@ -36,9 +36,8 @@ public class UnitGroup : MonoBehaviour {
         for (var it = _group.GetUnitEnumerator(); it.MoveNext();) {
             var unit = it.Current;
             var item = Instantiate(_itemTemplate);
-            var prop = item.Find("PropertyItem");
-            prop.Find("Name").GetComponent<Text>().text = unit.Name;
-            prop.Find("Value").GetComponent<Text>().text = $"Lv.{unit.GetIntProperty(PropertyType.Level)}";
+            var itemOne = item.GetComponent<UnitOne>();
+            itemOne.SetOne(unit);
             item.SetParent(_itemTemplate.parent, false);
             item.gameObject.SetActive(true);
             _itemUnitMap.Add(item, unit);

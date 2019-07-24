@@ -41,6 +41,7 @@ public class Test : MonoBehaviour {
         var cri = _unit.GetProperty<ValueProperty>(PropertyType.CriticalRate);
         var cridmg = _unit.GetProperty<ValueProperty>(PropertyType.CriticalDamage);
         hp.Base = 100;
+        hp.Current = 65;
         cri.Base = 0.50f;
         cridmg.Base = 2.00f;
         _act = _unit.AddSkill(new AttackAct("attack", 0, TargetType.One, new AttackFactors(magicFactorA: 0)));
@@ -112,11 +113,18 @@ public class Test : MonoBehaviour {
             unit.GetFloatProperty(PropertyType.MagicDefense)).Print());
     }
 
-    public void OnBtnTest(Text txt) {
-        txt.text = "OK";
+    public void OnBtnTest() {
         _act.Cast(new OneTarget(_unit2));
         _act.Cast(new OneTarget(_unit3));
         ShowUnit(_unit2);
         ShowUnit(_unit3);
+		var s = new PlayerState();
+        s.GenTestData();
+        PlayerSaveManager.Save(s, 0);
+	}
+
+    public void OnBtnTest1() {
+        var s = PlayerSaveManager.Load(0);
+        Debug.Log(s.ToString());
     }
 }
