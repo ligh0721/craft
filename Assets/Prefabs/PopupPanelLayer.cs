@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PanelLayer : MonoBehaviour {
+public class PopupPanelLayer : MonoBehaviour {
     public GameObject _panelRect;
 
     protected GameObject _panel;

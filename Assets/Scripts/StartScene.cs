@@ -5,15 +5,14 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class StartScene : MonoBehaviour {
-    public PlayerStatesPanel _playerStatesPanel;
-    public NewHeroPanel _newHeroPanel;
+    public PlayerStatesLayer _playerStatesLayer;
+    public NewHeroLayer _newHeroLayer;
     
-
     void Start() {
-        _newHeroPanel.gameObject.SetActive(false);
+        _newHeroLayer.gameObject.SetActive(false);
 
-        _playerStatesPanel.gameObject.SetActive(true);
-        _playerStatesPanel.LoadStates();
+        _playerStatesLayer.gameObject.SetActive(true);
+        _playerStatesLayer.LoadStates();
     }
 
     public void StartGame(bool newGame) {
@@ -27,8 +26,8 @@ public class StartScene : MonoBehaviour {
     }
 
     void NewGame() {
-        _newHeroPanel.gameObject.SetActive(true);
-        _newHeroPanel.GenProperties();
+        _newHeroLayer.gameObject.SetActive(true);
+        _newHeroLayer.GenProperties();
     }
 
     public void ContinueGame() {

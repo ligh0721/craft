@@ -1441,6 +1441,16 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3086514936565130239, guid: fc98308c4a92d444abe395825d5f04f1,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.8964706
+      objectReference: {fileID: 0}
+    - target: {fileID: 3086514936565130239, guid: fc98308c4a92d444abe395825d5f04f1,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc98308c4a92d444abe395825d5f04f1, type: 3}
 --- !u!224 &2142259195 stripped
@@ -1459,7 +1469,7 @@ PrefabInstance:
     - target: {fileID: 1899287367357854678, guid: 0ea4f79b99285485bb40352b081798ca,
         type: 3}
       propertyPath: m_Name
-      value: PanelLayer
+      value: PopupPanelLayer
       objectReference: {fileID: 0}
     - target: {fileID: 1899287367357854677, guid: 0ea4f79b99285485bb40352b081798ca,
         type: 3}
@@ -1754,6 +1764,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3086514936565130239, guid: fc98308c4a92d444abe395825d5f04f1,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.8964706
+      objectReference: {fileID: 0}
+    - target: {fileID: 3086514936565130239, guid: fc98308c4a92d444abe395825d5f04f1,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc98308c4a92d444abe395825d5f04f1, type: 3}

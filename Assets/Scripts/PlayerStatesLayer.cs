@@ -3,14 +3,28 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class PlayerStatesPanel : MonoBehaviour {
+public class PlayerStatesLayer : MonoBehaviour {
     public Text[] _slotTitles;
     public EventHandler t;
 
-    private PlayerState[] _stateCaches;
+    PlayerState[] _stateCaches;
+    float _s;
+    float _v;
 
     void Awake() {
         _stateCaches = new PlayerState[_slotTitles.Length];
+        Color.RGBToHSV(GetComponent<Image>().color, out _, out _s, out _v);
+        UpdateColor();
+    }
+
+    void Update() {
+        UpdateColor();
+    }
+
+    void UpdateColor() {
+        const float factor = 20.0f;
+        float h = (Time.time % factor) / factor;
+        GetComponent<Image>().color = Color.HSVToRGB(h, _s, _v);
     }
 
     public void LoadStates() {

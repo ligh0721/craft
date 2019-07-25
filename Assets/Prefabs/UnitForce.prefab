@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8279691587100692709}
   - component: {fileID: 8227531168472453952}
-  - component: {fileID: 3010263612847982499}
+  - component: {fileID: 711530863}
   m_Layer: 5
   m_Name: Slider
   m_TagString: Untagged
@@ -84,24 +84,37 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.8
+  m_Value: 0.7
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 711530863}
+        m_MethodName: OnValueChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
     m_TypeName: UnityEngine.UI.Slider+SliderEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!225 &3010263612847982499
-CanvasGroup:
+--- !u!114 &711530863
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2301805334940446653}
   m_Enabled: 1
-  m_Alpha: 0.5
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47cdad323f9c82443b4c5f8606b20db3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _baseColor: {r: 0.8039216, g: 1, b: 0.7411765, a: 0.5019608}
+  _graphic: {fileID: 3086514936565130239}
 --- !u!1 &2348071836858439436
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,7 +377,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8039216, g: 1, b: 0.7411765, a: 1}
+  m_Color: {r: 1, g: 0.7411765, b: 0.7411765, a: 0.5019608}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

@@ -3,22 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class NewHeroPanel : MonoBehaviour {
+public class NewHeroLayer : MonoBehaviour {
     public RectTransform _itemTemplate;
 
     Dictionary<PropertyType, Text> _propValueTextMap;
     Dictionary<PropertyType, int> _propValueMap;
 
-    NewHeroPanel() {
+    NewHeroLayer() {
         _propValueTextMap = new Dictionary<PropertyType, Text>();
         _propValueMap = new Dictionary<PropertyType, int>();
     }
 
     void Awake() {
         _itemTemplate.gameObject.SetActive(false);
-    }
 
-    void Start() {
         AddItem(PropertyType.Vitality, "体力");
         AddItem(PropertyType.Strength, "力量");
         AddItem(PropertyType.Intelligence, "智力");

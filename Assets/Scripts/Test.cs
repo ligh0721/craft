@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 
 public class Test : MonoBehaviour {
-    public PanelLayer _panelLayler;
+    public PopupPanelLayer _panelLayler;
     public TextList _out;
     public UnitForce _player;
     public UnitForce _enemies;
