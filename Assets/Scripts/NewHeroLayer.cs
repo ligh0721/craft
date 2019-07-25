@@ -25,9 +25,9 @@ public class NewHeroLayer : MonoBehaviour {
     }
 
     RectTransform AddItem(PropertyType type, string name) {
-        var item = Instantiate(_itemTemplate);
-        item.SetParent(_itemTemplate.parent);
+        var item = Instantiate(_itemTemplate, _itemTemplate.parent, false);
         item.gameObject.SetActive(true);
+
         var propName = item.Find("Name").GetComponent<Text>();
         propName.text = name;
         var propValue = item.Find("Value").GetComponent<Text>();
@@ -63,7 +63,6 @@ public class NewHeroLayer : MonoBehaviour {
         state.hero.intelligence = _propValueMap[PropertyType.Intelligence];
         state.hero.agility = _propValueMap[PropertyType.Agility];
 
-        gameObject.SetActive(false);
         transform.root.GetComponent<StartScene>().ContinueGame();
     }
 

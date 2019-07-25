@@ -18,10 +18,10 @@ public class TextList : MonoBehaviour {
     }
 
     public void AddItem(string text, bool updateLayout = true) {
-        var item = Instantiate(_itemTemplate);
-        item.transform.SetParent(_content.transform, false);
-        item.GetComponent<Text>().text = text;
+        var item = Instantiate(_itemTemplate, _content.transform, false);
         item.SetActive(true);
+
+        item.GetComponent<Text>().text = text;
         if (updateLayout == true) {
             UpdateLayout();
         }

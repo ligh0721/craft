@@ -17,11 +17,10 @@ public class UnitForce : MonoBehaviour {
         _force = force;
         for (var it = _force.GetGroupEnumerator(); it.MoveNext();) {
             var group = it.Current;
-            var item = Instantiate(_itemTemplate);
+            var item = Instantiate(_itemTemplate, _itemTemplate.parent, false);
+            item.gameObject.SetActive(true);
             var itemGroup = item.GetComponent<UnitGroup>();
             itemGroup.SetGroup(group, onUnitClickCallback);
-            item.SetParent(_itemTemplate.parent, false);
-            item.gameObject.SetActive(true);
         }
     }
 }

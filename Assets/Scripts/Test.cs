@@ -6,11 +6,12 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Xml.Serialization;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
 public class Test : MonoBehaviour {
-    public PopupPanelLayer _panelLayler;
+    public PopupPanelLayer _popup;
     public TextList _out;
     public UnitForce _player;
     public UnitForce _enemies;
@@ -77,12 +78,10 @@ public class Test : MonoBehaviour {
         var detailPanel = Instantiate(_detailPanel);
         detailPanel.SetTitle(unit.Name);
         detailPanel.SetPropertyCollection(unit.Properties);
-        _panelLayler.OpenPanel(detailPanel.gameObject);
+        _popup.PopupPanel(detailPanel.gameObject);
     }
 
-    // Update is called once per frame
     void Update() {
-
     }
 
     Unit CreateTestUnit(string unitName) {
@@ -115,20 +114,17 @@ public class Test : MonoBehaviour {
     }
 
     public void OnBtnTest() {
-        _act.Cast(new OneTarget(_unit2));
-        _act.Cast(new OneTarget(_unit3));
-        ShowUnit(_unit2);
-        ShowUnit(_unit3);
-
         PlayerStateManager.GenTestSaves();
     }
 
     public void OnBtnTest1() {
-        var s = PlayerStateManager.LoadState(0);
-        var dt = s.playTime - DateTime.MinValue;
-        _out.AddItem($"{(int)dt.TotalHours:D2}:{dt.Minutes:D2}");
+        _act.Cast(new OneTarget(_unit2));
+        _act.Cast(new OneTarget(_unit3));
+        ShowUnit(_unit2);
+        ShowUnit(_unit3);
+    }
 
-        dt = s.gameDate - DateTime.MinValue;
-        _out.AddItem($"{(int)dt.TotalDays + 1} Days");
+    public void OnBtnTest2() {
+        SceneManager.LoadScene("Start");
     }
 }

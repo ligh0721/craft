@@ -35,11 +35,11 @@ public class UnitGroup : MonoBehaviour {
         _onUnitClickCallback = onUnitClickCallback;
         for (var it = _group.GetUnitEnumerator(); it.MoveNext();) {
             var unit = it.Current;
-            var item = Instantiate(_itemTemplate);
+            var item = Instantiate(_itemTemplate, _itemTemplate.parent, false);
+            item.gameObject.SetActive(true);
+
             var itemOne = item.GetComponent<UnitOne>();
             itemOne.SetOne(unit);
-            item.SetParent(_itemTemplate.parent, false);
-            item.gameObject.SetActive(true);
             _itemUnitMap.Add(item, unit);
         }
     }

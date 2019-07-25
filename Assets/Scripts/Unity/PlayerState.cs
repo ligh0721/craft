@@ -30,12 +30,15 @@ public class HeroState {
 [Serializable]
 public class PlayerState {
     public DateTime playTime;
+    [NonSerialized]
     DateTime _saveTime;
 
     public int exp;
     public DateTime gameDate;
 
     public HeroState hero;
+    [NonSerialized]
+    Unit _hero;
 
     public Where where;
 
@@ -44,11 +47,28 @@ public class PlayerState {
         exp = 0;
         gameDate = new DateTime();
         hero = new HeroState();
+        where = Where.Home;
     }
 
     public static PlayerState New() {
         var state = new PlayerState();
         return state;
+    }
+
+    public PropertyCollection HeroProperties {
+        get {
+            if (_hero == null) {
+                _hero = new Unit("约瑟夫");
+            }
+            var level = Utils.CalcLevel(exp, GlobalData.expTable, out _);
+            _hero.GetProperty<IntProperty>(PropertyType.Level).Value = level;
+            _hero.GetProperty<ValueProperty>(PropertyType.Vitality).Base = hero.vitality;
+            _hero.GetProperty<ValueProperty>(PropertyType.Strength).Base = hero.strength;
+            _hero.GetProperty<ValueProperty>(PropertyType.Intelligence).Base = hero.intelligence;
+            _hero.GetProperty<ValueProperty>(PropertyType.Agility).Base = hero.agility;
+            _hero.UpdateBattleProperties();
+            return _hero.Properties;
+        }
     }
 
     public void GenTestData() {
@@ -77,6 +97,7 @@ public static class PlayerStateManager {
     public const int MAX_SLOTS = 3;
 
     public static PlayerState currentState { get; private set; }
+    static int _currentSlot;
 
     static PlayerStateManager() {
     }
@@ -102,19 +123,26 @@ public static class PlayerStateManager {
 
         var st = new FileStream(path, FileMode.OpenOrCreate);
         var fmt = new BinaryFormatter();
+        state.UpdatePlayTime();
+        Debug.Log(state.playTime);
         fmt.Serialize(st, state);
         st.Close();
     }
 
+    public static void SaveState() => SaveState(currentState, _currentSlot);
+
     public static PlayerState NewState() => PlayerState.New();
 
-    public static void ChooseState(PlayerState state) => currentState = state;
+    public static void ChooseState(PlayerState state, int slot) {
+        currentState = state;
+        _currentSlot = slot;
+        state.UpdatePlayTime(true);
+    }
 
     public static void GenTestSaves() {
         var state = PlayerState.New();
         state.GenTestData();
         SaveState(state, 0);
         SaveState(state, 1);
-        SaveState(state, 3);
     }
 }

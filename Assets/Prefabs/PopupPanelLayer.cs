@@ -5,11 +5,11 @@ using UnityEngine;
 public class PopupPanelLayer : MonoBehaviour {
     public GameObject _panelRect;
 
-    protected GameObject _panel;
+    GameObject _panel;
 
-    protected CanvasGroup _canvasGroup;
+    CanvasGroup _canvasGroup;
 
-    protected Animation _maskFadeIn;
+    Animation _maskFadeIn;
 
     void Awake() {
         _canvasGroup = GetComponent<CanvasGroup>();
@@ -17,27 +17,32 @@ public class PopupPanelLayer : MonoBehaviour {
     }
 
     void Start() {
-
+        _canvasGroup.blocksRaycasts = false;
+        _canvasGroup.interactable = false;
+        _canvasGroup.alpha = 0;
     }
 
     public void OnClickLayer() {
         ClosePanel();
     }
 
-    public void OpenPanel(GameObject panel) {
+    public void PopupPanel(GameObject panel) {
         _panel = panel;
         _panel.transform.SetParent(_panelRect.transform, false);
+        _panel.SetActive(true);
         _canvasGroup.blocksRaycasts = true;
         _canvasGroup.interactable = true;
         _canvasGroup.alpha = 1;
         _maskFadeIn.Play();
     }
 
+    public void PopupPanel(MonoBehaviour panel) => PopupPanel(panel.gameObject);
+
     public void ClosePanel() {
         _canvasGroup.blocksRaycasts = false;
         _canvasGroup.interactable = false;
         _canvasGroup.alpha = 0;
         _maskFadeIn.Stop();
-        Destroy(_panel);
+        _panel.SetActive(false);
     }
 }

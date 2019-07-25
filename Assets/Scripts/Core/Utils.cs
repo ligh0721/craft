@@ -55,4 +55,8 @@ public static class Utils {
         }
         return level;
     }
+
+    public static Action Bind<T>(T func, params object[] args) => delegate () {
+        (func as Delegate)?.DynamicInvoke(args);
+    };
 }

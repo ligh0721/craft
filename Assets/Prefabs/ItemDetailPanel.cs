@@ -16,18 +16,28 @@ public class ItemDetailPanel : MonoBehaviour {
     public void SetPropertiesOrder(params PropertyType[] order) => _propsOrder = order;
 
     public void SetPropertyCollection(PropertyCollection props) {
+        Clear();
         foreach (var type in _propsOrder) {
             var prop = props.GetProperty(type);
             if (prop == null) {
                 continue;
             }
-            var item = Instantiate(_propertyItemTemplate);
+            var item = Instantiate(_propertyItemTemplate, _propertyItemTemplate.parent, false);
+            item.gameObject.SetActive(true);
+
             var txtName = item.transform.Find("Name").GetComponent<Text>();
             var txtValue = item.transform.Find("Value").GetComponent<Text>();
             txtName.text = prop.Name;
             txtValue.text = prop.ToString();
-            item.SetParent(_propertyItemTemplate.parent, false);
-            item.gameObject.SetActive(true);
+        }
+    }
+
+    public void Clear() {
+        foreach (RectTransform item in _propertyItemTemplate.parent) {
+            if (item == _propertyItemTemplate) {
+                continue;
+            }
+            Destroy(item.gameObject);
         }
     }
 }

@@ -52,22 +52,22 @@ public class SerialSetBase<VALUE, SET> : ISerializationCallbackReceiver where SE
     protected SET _target;
 
     [SerializeField]
-    protected List<VALUE> values;
+    protected List<VALUE> _values;
 
     public SerialSetBase(SET target) {
         _target = target;
     }
 
     public void OnAfterDeserialize() {
-        var count = values.Count;
+        var count = _values.Count;
         _target = new SET();
         for (int i = 0; i < count; ++i) {
-            _target.Add(values[i]);
+            _target.Add(_values[i]);
         }
     }
 
     public void OnBeforeSerialize() {
-        values = new List<VALUE>(_target);
+        _values = new List<VALUE>(_target);
     }
 
     public SET ToSet() => _target;

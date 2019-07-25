@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class StartScene : MonoBehaviour {
@@ -11,13 +12,11 @@ public class StartScene : MonoBehaviour {
     void Start() {
         _newHeroLayer.gameObject.SetActive(false);
 
-        _playerStatesLayer.gameObject.SetActive(true);
+        LayerManager.LoadLayer(_playerStatesLayer);
         _playerStatesLayer.LoadStates();
     }
 
     public void StartGame(bool newGame) {
-        var state = PlayerStateManager.currentState;
-        state.UpdatePlayTime(true);
         if (newGame) {
             NewGame();
         } else {
@@ -26,11 +25,11 @@ public class StartScene : MonoBehaviour {
     }
 
     void NewGame() {
-        _newHeroLayer.gameObject.SetActive(true);
+        LayerManager.LoadLayer(_newHeroLayer);
         _newHeroLayer.GenProperties();
     }
 
     public void ContinueGame() {
-
+        SceneManager.LoadScene("Main");
     }
 }
