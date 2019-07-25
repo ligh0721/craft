@@ -120,11 +120,11 @@ public class Test : MonoBehaviour {
         ShowUnit(_unit2);
         ShowUnit(_unit3);
 
-        PlayerSaveManager.GenTestSaves();
+        PlayerStateManager.GenTestSaves();
     }
 
     public void OnBtnTest1() {
-        var s = PlayerSaveManager.Load(0);
+        var s = PlayerStateManager.LoadState(0);
         var dt = s.playTime - DateTime.MinValue;
         _out.AddItem($"{(int)dt.TotalHours:D2}:{dt.Minutes:D2}");
 

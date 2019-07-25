@@ -11,6 +11,8 @@ public static class Utils {
 
     public static int RandomInt(int maxValue) => _rnd.Next(maxValue);
 
+    public static int RandomInt(int minValue, int maxValue) => _rnd.Next(minValue, maxValue);
+
     public static bool Chance(float chance) => chance > 0.00f && _rnd.NextDouble() < chance;
 
     public static int AllyMask(int force1, params int[] otherForces) {
@@ -33,5 +35,24 @@ public static class Utils {
         int allyMask = unit.GetIntProperty(PropertyType.BattleForceAllyMask);
         int targetForce = target.GetIntProperty(PropertyType.BattleForce);
         return (ForceRelation(force, targetForce, allyMask) & targetRelation) != 0;
+    }
+
+    public static int CalcLevel(int exp, int[] expTable, out float per) {
+        int maxLevel = expTable.Length;
+        int level = 1;
+        float baseExp = 0;
+        per = 1.00f;
+        foreach (var levelExp in expTable) {
+            if (exp < levelExp) {
+                per = (exp - baseExp) / (levelExp - baseExp);
+                break;
+            }
+            ++level;
+            baseExp = levelExp;
+        }
+        if (level > maxLevel) {
+            level = maxLevel;
+        }
+        return level;
     }
 }
