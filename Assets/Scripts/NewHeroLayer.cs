@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Player;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -55,7 +56,7 @@ public class NewHeroLayer : MonoBehaviour {
     }
 
     public void OnStartClick() {
-        var state = PlayerStateManager.currentState;
+        var state = StateManager.currentState;
 
         state.exp = 0;
         state.hero.vitality = _propValueMap[PropertyType.Vitality];

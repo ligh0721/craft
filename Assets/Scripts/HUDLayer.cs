@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Player;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class HUDLayer : MonoBehaviour {
@@ -14,7 +15,7 @@ public class HUDLayer : MonoBehaviour {
     void Start() {
         UpdateHUD();
         AddToolbarItem<ToolbarItem.Status>();
-        AddToolbarItem<ToolbarItem.Travel>();
+        AddToolbarItem<ToolbarItem.Travel>().OnClick();
         AddToolbarItem<ToolbarItem.Option>();
     }
 
@@ -23,17 +24,18 @@ public class HUDLayer : MonoBehaviour {
     }
 
     public void UpdateHUD() {
-        var level = Utils.CalcLevel(PlayerStateManager.currentState.exp, GlobalData.expTable, out var per);
+        var level = Utils.CalcLevel(StateManager.currentState.exp, GlobalData.ExpTable, out var per);
         _level.text = $"Lv.{level.ToString()}";
         _expBar.value = per;
     }
 
-    public void AddToolbarItem<T>() where T : ToolbarItem.ToolbarItemBase {
+    public T AddToolbarItem<T>() where T : ToolbarItem.ToolbarItemBase {
         var item = Instantiate(_toolbarItemTemplate, _toolbarItemTemplate.parent, false);
         item.gameObject.SetActive(true);
 
         var script = item.gameObject.AddComponent<T>();
         script._title = item.GetComponentInChildren<Text>();
         item.GetComponent<Button>().onClick.AddListener(script.OnClick);
+        return script;
     }
 }

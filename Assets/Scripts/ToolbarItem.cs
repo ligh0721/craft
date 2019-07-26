@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Player;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace ToolbarItem {
@@ -38,7 +39,7 @@ namespace ToolbarItem {
             }
             _panel.SetTitle("状态信息");
             _panel.SetPropertiesOrder(PropertyType.Level, PropertyType.Vitality, PropertyType.Strength, PropertyType.Intelligence, PropertyType.Agility, PropertyType.Health, PropertyType.PhysicAttack, PropertyType.MagicAttack, PropertyType.PhysicDefense, PropertyType.MagicDefense, PropertyType.CriticalRate, PropertyType.CriticalDamage, PropertyType.Speed);
-            _panel.SetPropertyCollection(PlayerStateManager.currentState.HeroProperties);
+            _panel.SetPropertyCollection(StateManager.currentState.HeroProperties);
             transform.root.Find("ContentPanelLayer").GetComponent<ContentPanelLayer>().ShowPanel(_panel);
         }
     }
@@ -72,6 +73,7 @@ namespace ToolbarItem {
             if (_panel == null) {
                 _panel = transform.root.GetComponent<PrefabCollection>().Instantiate<TravelPanel>("TravelPanel");
             }
+            _panel.AddCitiesForPlayer();
             transform.root.Find("ContentPanelLayer").GetComponent<ContentPanelLayer>().ShowPanel(_panel);
         }
     }

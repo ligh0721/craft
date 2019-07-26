@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Slider))]
 public class HealthBarColor : MonoBehaviour {
     public Color _baseColor = Color.green;
     public Graphic _graphic;
@@ -17,9 +18,6 @@ public class HealthBarColor : MonoBehaviour {
             }
             return _healthBarColorHelper;
         }
-    }
-
-    void Awake() {
     }
 
     private void OnValidate() {

@@ -29,10 +29,10 @@ public class PopupPanelLayer : MonoBehaviour {
     public void PopupPanel(GameObject panel) {
         _panel = panel;
         _panel.transform.SetParent(_panelRect.transform, false);
-        _panel.SetActive(true);
         _canvasGroup.blocksRaycasts = true;
         _canvasGroup.interactable = true;
         _canvasGroup.alpha = 1;
+        _panel.SetActive(true);
         _maskFadeIn.Play();
     }
 

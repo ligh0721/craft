@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using Player;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class OptionPanel : MonoBehaviour {
     public void OnQuitClick() {
-        PlayerStateManager.SaveState();
+        StateManager.SaveState();
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else

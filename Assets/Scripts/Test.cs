@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Player;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
@@ -114,7 +115,7 @@ public class Test : MonoBehaviour {
     }
 
     public void OnBtnTest() {
-        PlayerStateManager.GenTestSaves();
+        StateManager.GenTestSaves();
     }
 
     public void OnBtnTest1() {

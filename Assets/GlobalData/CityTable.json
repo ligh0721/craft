@@ -1,0 +1,30 @@
+{
+    "type": "CityTable",
+	"data": [
+		{
+			"name": "河木镇",
+			"level": 1,
+			"unlock": []
+		},
+		{
+			"name": "白漫城",
+			"level": 3,
+			"unlock": ["unlock/baimancheng"]
+		},
+		{
+			"name": "风舵城",
+			"level": 5,
+			"unlock": []
+		},
+		{
+			"name": "裂谷城",
+			"level": 8,
+			"unlock": []
+		},
+		{
+			"name": "马卡斯城",
+			"level": 12,
+			"unlock": []
+		}
+	]
+}
